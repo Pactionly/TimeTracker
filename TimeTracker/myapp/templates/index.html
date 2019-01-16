@@ -1,46 +1,40 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block body %}
   <body>
     <div class="grid-container">
-      <div class="grid-x grid-padding-x small-up-2 medium-up-3">
+      <div class="grid-y grid-padding-y">
+        <div class="cell small-12 medium-12 large-12 offset-2">
+          <h1>Welcome to Time Tracker</h1>
+        <div>
+      </div>
+      <div class="grid-x grid-padding-x small-up-1 medium-up-2 large-up-3">
         <div class="cell">
           <div class="card">
             <div class="card-divider">
-              <h4>I'm featured</h4>
+              <h4>Timesheet</h4>
             </div>
-            <img src="assets/img/generic/rectangle-1.jpg">
-            <div class="card-section">
-              <h4>This is a row of cards.</h4>
-              <p>This row of cards is embedded in an X-Y Block Grid.</p>
-            </div>
+            <img src="{% static "media/timesheet.png" %}">
           </div>
         </div>
         <div class="cell">
           <div class="card">
             <div class="card-divider">
-              <h4>I'm featured</h4>
+              <h4>Calendar</h4>
             </div>
-            <img src="assets/img/generic/rectangle-1.jpg">
-            <div class="card-section">
-              <h4>This is a card.</h4>
-              <p>It has an easy to override visual style, and is appropriately subdued.</p>
-            </div>
+            <img src="{% static "media/calendar.png" %}">
           </div>
         </div>
         <div class="cell">
           <div class="card">
             <div class="card-divider">
-              <h4>I'm featured</h4>
+              <h4>Profile</h4>
             </div>
-            <img src="assets/img/generic/rectangle-1.jpg">
-            <div class="card-section">
-              <h4>This is a card.</h4>
-              <p>It has an easy to override visual style, and is appropriately subdued.</p>
-            </div>
+            <img src="{% static "media/profile.png" %}">
           </div>
         </div>
       </div>
+
     </div>
   </body>
 {% endblock %}
