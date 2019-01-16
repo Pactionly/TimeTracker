@@ -9,6 +9,10 @@ def mycalendar(request):
     context = {}
     return render(request, 'calendar.html', context)
 
+def mcx(request):
+    context = {}
+    return render(request, 'mcx.html', context)
+
 
 
 # Create your views here.
