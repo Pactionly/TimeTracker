@@ -7,5 +7,7 @@ urlpatterns = [
   path('', views.index, name='index'),
   path('login/', adminviews.LoginView.as_view()),
   path('register/', views.register),
-  path('logout/', views.logout_view), 
+  path('logout/', views.logout_view),
+  path('sheets/', views.sheets_view),
+  path('oauth2callback/', views.sheets_auth),
 ]
