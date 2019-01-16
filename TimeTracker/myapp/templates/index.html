@@ -15,6 +15,7 @@
           <p>This row of cards is embedded in an X-Y Block Grid.</p>
         </div>
       </div>
+<<<<<<< HEAD
     </div>
     <div class="cell">
       <div class="card">
@@ -42,5 +43,30 @@
     </div>
   </div>
 </div>
+=======
+      <div class="top-bar-right" style="color:#FFFFFF; background-color:#000000">
+        <ul class="menu" style="color:#FFFFFF; background-color:#000000">
+          {% if user.is_authenticated %}
+          <li><a href="/profile/" style="color:#FFFFFF; background-color:#000000">Your Profile</a></li>
+          <li><a href="/logout/" class="button expanded">Log Out</a></li>
+          {% else %}
+          <li><a href="/login/" class="button expanded">Log In or Register</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+
+    {% if user.is_authenticated %}
+    <h1> Logged In </h1>
+    {% endif %}
+    {% block body %}
+    {% endblock %}
+    <script src="{% static "js/vendor/jquery.js" %}"></script>
+    <script src="{% static "js/vendor/what-input.js" %}"></script>
+    <script src="{% static "js/vendor/foundation.js" %}"></script>
+    <script src="{% static "js/app.js" %}"></script>
+    {% block script %}
+    {% endblock %}
+>>>>>>> 198bc92cf00831b3b9bb41fa50f49b6c080ae257
   </body>
 {% endblock %}
