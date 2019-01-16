@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block body %}
   <body>
     <div class="grid-container">
@@ -7,9 +7,9 @@
         <div class="cell">
           <div class="card">
             <div class="card-divider">
-              <h4>I'm featured</h4>
+              <h4>Timesheet</h4>
             </div>
-            <img src="assets/img/generic/rectangle-1.jpg">
+            <img src="{% static "media/timesheet.png" %}">
             <div class="card-section">
               <h4>This is a row of cards.</h4>
               <p>This row of cards is embedded in an X-Y Block Grid.</p>
@@ -19,9 +19,9 @@
         <div class="cell">
           <div class="card">
             <div class="card-divider">
-              <h4>I'm featured</h4>
+              <h4>Calendar</h4>
             </div>
-            <img src="assets/img/generic/rectangle-1.jpg">
+            <img src="{% static "media/calendar.png" %}">
             <div class="card-section">
               <h4>This is a card.</h4>
               <p>It has an easy to override visual style, and is appropriately subdued.</p>
@@ -31,9 +31,9 @@
         <div class="cell">
           <div class="card">
             <div class="card-divider">
-              <h4>I'm featured</h4>
+              <h4>Profile</h4>
             </div>
-            <img src="assets/img/generic/rectangle-1.jpg">
+            <img src="{% static "media/profile.png" %}">
             <div class="card-section">
               <h4>This is a card.</h4>
               <p>It has an easy to override visual style, and is appropriately subdued.</p>
