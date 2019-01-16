@@ -1,6 +1,7 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*.pyc
 *$py.class
 # C extensions
 *.so
@@ -187,3 +188,6 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Google API
+*.json
