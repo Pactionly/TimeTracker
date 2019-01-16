@@ -22,13 +22,17 @@
         <ul class="menu" style="color:#FFFFFF; background-color:#000000">
           {% if user.is_authenticated %}
           <li><a href="/profile/" style="color:#FFFFFF; background-color:#000000">Your Profile</a></li>
-          <li><a href="/logout_view/" class="button expanded">Log Out</a></li>
+          <li><a href="/logout/" class="button expanded">Log Out</a></li>
           {% else %}
           <li><a href="/login/" class="button expanded">Log In or Register</a></li>
           {% endif %}
         </ul>
       </div>
     </div>
+
+    {% if user.is_authenticated %}
+    <h1> Logged In </h1>
+    {% endif %}
     {% block body %}
     {% endblock %}
     <script src="{% static "js/vendor/jquery.js" %}"></script>
