@@ -1,13 +1,19 @@
 {% extends "base.html" %}
 
 {% block body %}
-<head>
+  <head>
     <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
   </head>
   <body>
-    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+    <div class="grid-container">
+      <div class="grid-x grid-padding-x">
+        <div class="column large-12 medium-12 small-12">
+          <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+        </div>
+      </div>
+    </div>
     <script>
       function onSignIn(googleUser) {
         // Useful data for your client-side scripts:
