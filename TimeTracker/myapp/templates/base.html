@@ -10,24 +10,24 @@
     <link rel="stylesheet" href="{% static "css/app.css" %}">
   </head>
   <body>
-    <div class="top-bar" style="color:#FFFFFF; background-color:#000000">
-      <div class="top-bar-left" style="color:#FFFFFF; background-color:#000000">
-        <ul class="dropdown menu" data-dropdown-menu style="color:#FFFFFF; background-color:#000000">
-          <li class="menu-text" style="color:#FFFFFF; background-color:#000000">Time Tracker</li>
-          <li><a href="/" style="color:#FFFFFF; background-color:#000000">Home</a></li>
-        </ul>
+      <div class="top-bar" style="color:#FFFFFF; background-color:#000000">
+        <div class="top-bar-left" style="color:#FFFFFF; background-color:#000000">
+          <ul class="dropdown menu" data-dropdown-menu style="color:#FFFFFF; background-color:#000000">
+            <li class="menu-text" style="color:#FFFFFF; background-color:#000000">Time Tracker</li>
+            <li><a href="/" style="color:#FFFFFF; background-color:#000000">Home</a></li>
+          </ul>
+        </div>
+        <div class="top-bar-right" style="color:#FFFFFF; background-color:#000000">
+          <ul class="menu" style="color:#FFFFFF; background-color:#000000">
+            {% if user.is_authenticated %}
+            <li><a href="/profile/" style="color:#FFFFFF; background-color:#000000">Your Profile</a></li>
+            <li><a href="/logout/" class="button expanded">Log Out</a></li>
+            {% else %}
+            <li><a href="/login/" class="button expanded">Log In or Register</a></li>
+            {% endif %}
+          </ul>
+        </div>
       </div>
-      <div class="top-bar-right" style="color:#FFFFFF; background-color:#000000">
-        <ul class="menu" style="color:#FFFFFF; background-color:#000000">
-          {% if user.is_authenticated %}
-          <li><a href="/profile/" style="color:#FFFFFF; background-color:#000000">Your Profile</a></li>
-          <li><a href="/logout/" class="button expanded">Log Out</a></li>
-          {% else %}
-          <li><a href="/login/" class="button expanded">Log In or Register</a></li>
-          {% endif %}
-        </ul>
-      </div>
-    </div>
     {% block body %}
     {% endblock %}
     <script src="{% static "js/vendor/jquery.js" %}"></script>
