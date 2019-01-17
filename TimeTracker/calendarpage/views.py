@@ -7,15 +7,15 @@ def index(request):
     """HTTP Response"""
     return HttpResponse("<h1> CALENDAR PAGE")
 
-def mycalendar(request):
-    """Render calendar template"""
+def outputCalText(request):
+    """Render outputCalText template"""
     context = {}
-    return render(request, 'calendar.html', context)
+    return render(request, 'outputCalText.html', context)
 
-def mcx(request):
-    """Render mcx template"""
+def addToCalendar(request):
+    """Render addToCalendar template"""
     context = {}
-    return render(request, 'mcx.html', context)
+    return render(request, 'addToCalendar.html', context)
 
 
 
