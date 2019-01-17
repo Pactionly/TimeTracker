@@ -1,8 +1,10 @@
+"""Render view templates"""
 from django.shortcuts import render
 
 from django.http import HttpResponse
-     
+
 def index(request):
+    """HTTP Response"""
     return HttpResponse("<h1> CALENDAR PAGE")
 
 def outputCalText(request):
