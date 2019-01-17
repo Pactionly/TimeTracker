@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
   <head>
@@ -5,6 +6,16 @@
     <meta charset="utf-8" />
   </head>
   <body>
+      <div class="top-bar" style="color:#FFFFFF; background-color:#000000">
+        <div class="top-bar-left" style="color:#FFFFFF; background-color:#000000">
+          <ul class="dropdown menu" data-dropdown-menu style="color:#FFFFFF; background-color:#000000">
+            <li class="menu-text" style="color:#FFFFFF; background-color:#000000">Time Tracker Calendar</li>
+            <li><a href="/" style="color:#FFFFFF; background-color:#000000">Home</a></li>
+            <li><a href="/calendar/" style="color:#FFFFFF; background-color:#000000">Add Event To Calendar</a></li>
+            <li><a href="/timesheet" style="color:#FFFFFF; background-color:#000000">Timesheet</a></li>
+          </ul>
+        </div>
+      </div>
     <p>Google Calendar API Quickstart</p>
 
     <!--Add buttons to initiate auth sequence and sign out-->

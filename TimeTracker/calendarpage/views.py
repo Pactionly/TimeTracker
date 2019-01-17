@@ -7,11 +7,11 @@ def index(request):
 
 def mycalendar(request):
     context = {}
-    return render(request, 'calendar.html', context)
+    return render(request, 'mcx.html', context)
 
 def mcx(request):
     context = {}
-    return render(request, 'mcx.html', context)
+    return render(request, 'test.html', context)
 
 
 
