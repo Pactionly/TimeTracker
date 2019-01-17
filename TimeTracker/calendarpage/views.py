@@ -5,13 +5,13 @@ from django.http import HttpResponse
 def index(request):
     return HttpResponse("<h1> CALENDAR PAGE")
 
-def mycalendar(request):
+def outputCalText(request):
     context = {}
-    return render(request, 'mcx.html', context)
+    return render(request, 'outputCalText.html', context)
 
-def mcx(request):
+def addToCalendar(request):
     context = {}
-    return render(request, 'test.html', context)
+    return render(request, 'addToCalendar.html', context)
 
 
 
