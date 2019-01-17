@@ -1,11 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
+import httplib2
 from googleapiclient.discovery import build
+from oauth2client import client, GOOGLE_TOKEN_URI, GOOGLE_REVOKE_URI
 
 from . import forms
+from . import models
 # Create your views here.
 from django.http import HttpResponse
 
@@ -31,6 +35,7 @@ def logout_view(request):
   logout(request)
   return redirect("/login/")
 
+@login_required
 def sheets_view(request):
   flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
     '/code/client_secret',
@@ -43,6 +48,7 @@ def sheets_view(request):
   )
   return redirect(authorization_url)
 
+@login_required
 def sheets_auth(request):
   state = request.GET.get('state', None)
   flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
@@ -50,13 +56,35 @@ def sheets_auth(request):
     scopes=['https://www.googleapis.com/auth/drive'],
     state=state
   )
+  code = request.GET.get('code', None)
   flow.redirect_uri = 'http://localhost:8000/oauth2callback'
   authorization_response = request.build_absolute_uri()        
-  flow.fetch_token(authorization_response=authorization_response)
+  flow.fetch_token(code=code) 
   credentials = flow.credentials
 
+  if credentials.refresh_token:
+    token = models.AuthModel(
+      id = request.user,
+      refresh_key = credentials.refresh_token
+    )
+    token.save()
+  credentials = client.OAuth2Credentials(
+    access_token = None,
+    client_id = credentials.client_id,
+    client_secret = credentials.client_secret,
+    refresh_token = request.user.AuthModel.refresh_key,
+    token_expiry = None,
+    token_uri = GOOGLE_TOKEN_URI,
+    user_agent = None,
+    revoke_uri = GOOGLE_REVOKE_URI
+  )
+  print("cred")
+  print(credentials.refresh_token)
+  print(credentials.token_uri)
+  print(credentials.client_id)
+  print(credentials.client_secret)
+  credentials.refresh(httplib2.Http())
   service = build('sheets', 'v4', credentials=credentials)
-
   # Call the Sheets API
   file_id = '1JuoSIWuGtA5S_KDx4NX7f_eJs_GsdgO5W0rjdzQgNVg'
   sheet = service.spreadsheets()
