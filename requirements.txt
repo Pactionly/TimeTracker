@@ -3,3 +3,5 @@ google-api-python-client
 oauth2client
 google-auth-oauthlib
 django-allauth
+pylint
+pylint-django
