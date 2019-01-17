@@ -1,13 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Google Calendar Example</title>
-  <link rel="stylesheet" href="">
-</head>
-
+<h1><link rel="stylesheet" href="{% static "css/foundation.css" %}"></h1>
 <body>
    <div class="top-bar" style="color:#FFFFFF; background-color:#000000">
      <div class="top-bar-left" style="color:#FFFFFF; background-color:#000000">
@@ -19,7 +13,9 @@
        </ul>
      </div>
    </div>
+</body>
 <h1>Add Event to Your Calendar</h1> 
+  <body>
   <div id="content">
     <p>Fill these fields to enter a new event in your Google Calendar.</p>
     <p><label>Select a date: <input type="date" id="date"></label></p>
@@ -27,11 +23,11 @@
        <label>End time: <input type="time" id="end"></label>
     </p>
     <p><label>Event description: <input type="text" id="event" size=60></label></p>
-    <p><button id="authorize-button" style="visibility: hidden">Login & Authorize</button></p>
-    <p><button id="addToCalendar" style="visibility: hidden">Add to Google Calendar</button></p>
+    <p><button id="authorize-button" class="button" style="visibility: hidden">Login & Authorize</button></p>
+    <p><button id="addToCalendar" class="button" style="visibility: hidden">Add to Google Calendar</button></p>
   </div>
     <!--Add a button for the user to click to initiate auth sequence -->
-    <script src="{% static "js/vendor/test.js" %}"></script>
+    <script src="{% static "js/vendor/addToCalendar.js" %}"></script>
     <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
   </body>
 </html>
