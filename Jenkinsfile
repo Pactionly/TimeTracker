@@ -1,5 +1,5 @@
 #!groovy
-node('Django_slave') {
+node {
     try {
         stage 'Checkout'
           checkout scm
