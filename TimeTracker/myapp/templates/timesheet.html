@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Timesheet{% endblock %}
+{% block body %}
+
+<div class="grid-x grid-padding-x">
+  <div class="large-4 medium-4 small-12 large-offset-4 medium-offset-4 cell">
+    <form action="/timesheet/" method="post">
+      {% csrf_token %}
+      <h4 class="text-center">Timesheet</h4>
+      {{ form.errors }}
+      {{ form.sheet_id.label_tag }}
+      {{ form.sheet_id }}
+      {{ form.activity.label_tag }}
+      {{ form.activity }}
+      {{ form.comments.label_tag }}
+      {{ form.comments }}
+      <input type="submit" class="button expanded" value="Summit" />
+    </form>
+  </div>
+</div>
+{% endblock %}

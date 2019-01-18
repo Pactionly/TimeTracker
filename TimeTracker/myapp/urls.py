@@ -11,4 +11,5 @@ urlpatterns = [
     path('login/', adminviews.LoginView.as_view()),
     path('register/', views.register),
     path('logout/', views.logout_view),
+    path('timesheet/', views.sheets)
 ]

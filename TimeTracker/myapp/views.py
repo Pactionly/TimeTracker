@@ -35,6 +35,22 @@ def logout_view(request):
     return redirect("/login/")
 
 @login_required
+def sheets(request):
+    """View to display sheet update form"""
+    if request.method == 'POST':
+        sheet_form = forms.TimesheetForm(request.POST)
+        if sheet_form.is_valid():
+            # pylint: disable=fixme
+            # TODO Make API calls
+            return redirect('/')
+    else:
+        sheet_form = forms.TimesheetForm()
+    context = {
+        'form': sheet_form
+    }
+    return render(request, 'timesheet.html', context=context)
+
+@login_required
 def sheets_view(request):
     """Google Authentication"""
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
@@ -52,11 +68,9 @@ def sheets_view(request):
 @login_required
 def sheets_auth(request):
     """Called After Google Auth"""
-    state = request.GET.get('state', None)
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
         '/code/client_secret',
         scopes=['https://www.googleapis.com/auth/drive'],
-        state=state
     )
     code = request.GET.get('code', None)
     flow.redirect_uri = 'http://localhost:8000/oauth2callback'
