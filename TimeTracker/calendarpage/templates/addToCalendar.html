@@ -1,9 +1,9 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="">
-<h1><link rel="stylesheet" href="{% static "css/foundation.css" %}"></h1>
 <body>
-   <div class="top-bar" style="color:#FFFFFF; background-color:#000000">
+   <!-- <div class="top-bar" style="color:#FFFFFF; background-color:#000000"> IF UNCOMMENT ADD </DIV>-->
+
      <div class="top-bar-left" style="color:#FFFFFF; background-color:#000000">
        <ul class="dropdown menu" data-dropdown-menu style="color:#FFFFFF; background-color:#000000">
          <li class="menu-text" style="color:#FFFFFF; background-color:#000000">Time Tracker Calendar</li>
@@ -12,7 +12,6 @@
          <li><a href="/timesheet" style="color:#FFFFFF; background-color:#000000">Timesheet</a></li>
        </ul>
      </div>
-   </div>
 </body>
 <h1>Add Event to Your Calendar</h1> 
   <body>
@@ -29,5 +28,6 @@
     <!--Add a button for the user to click to initiate auth sequence -->
     <script src="{% static "js/vendor/addToCalendar.js" %}"></script>
     <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
+    <link rel="stylesheet" href="{% static "css/foundation.css" %}">
   </body>
 </html>
