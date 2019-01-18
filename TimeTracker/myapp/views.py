@@ -41,16 +41,17 @@ def sheets(request):
     if request.method == 'POST':
         sheet_form = forms.TimesheetForm(request.POST)
         if sheet_form.is_valid():
-            service = util.authenticate(request.user ,'sheets', 'v4')
+            service = util.authenticate(request.user, 'sheets', 'v4')
             if not service:
                 return redirect('/begin_google_auth')
             sheet_range = 'Sheet2!B3:E3'
-            body = {'values': [[ 
+            body = {'values': [[
                 'TestDate',
                 sheet_form.cleaned_data['activity'],
                 '8',
                 sheet_form.cleaned_data['comments']
             ]]}
+            # pylint: disable=no-member
             service.spreadsheets().values().update(
                 spreadsheetId=sheet_form.cleaned_data['sheet_id'],
                 valueInputOption='USER_ENTERED',

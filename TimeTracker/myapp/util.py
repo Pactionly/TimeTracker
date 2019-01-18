@@ -1,14 +1,16 @@
-from oauth2client import client, GOOGLE_TOKEN_URI, GOOGLE_REVOKE_URI
-from googleapiclient.discovery import build
+"""Utility Functions"""
 
 import json
+
+from oauth2client import client, GOOGLE_TOKEN_URI, GOOGLE_REVOKE_URI
+from googleapiclient.discovery import build
 
 
 def authenticate(user, api, version):
     """Returns google service"""
 
-    with open('/code/client_secret', 'r') as f:
-        client_secret_file = json.load(f)
+    with open('/code/client_secret', 'r') as file:
+        client_secret_file = json.load(file)
     try:
         credentials = client.OAuth2Credentials(
             access_token=None,
@@ -21,8 +23,7 @@ def authenticate(user, api, version):
             revoke_uri=GOOGLE_REVOKE_URI
         )
         return build(api, version, credentials=credentials)
-    except Exception as e:
-        print(e)
+    # pylint: disable=broad-except
+    except Exception as exc:
+        print(exc)
         return None
-
-
