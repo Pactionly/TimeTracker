@@ -5,7 +5,7 @@ from django.contrib.auth import views as adminviews
 from . import views
 
 urlpatterns = [
-    path('sheets/', views.sheets_view),
+    path('begin_google_auth/', views.begin_google_auth),
     path('oauth2callback/', views.sheets_auth),
     path('', views.index, name='index'),
     path('login/', adminviews.LoginView.as_view()),
