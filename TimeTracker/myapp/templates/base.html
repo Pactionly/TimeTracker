@@ -19,20 +19,20 @@
       </ul>
     </div>
     <div class="off-canvas-content" data-off-canvas-content>
-      <div class="top-bar" style="color:#FFFFFF; background-color:#000000">
-        <div class="top-bar-left" style="color:#FFFFFF; background-color:#000000">
-          <ul class="dropdown menu" data-dropdown-menu style="color:#FFFFFF; background-color:#000000">
+      <div class="top-bar">
+        <div class="top-bar-left">
+          <ul class="dropdown menu" data-dropdown-menu>
             <li><button type="button" class="button" data-toggle="offCanvas">Menu</button></li>
-            <li class="menu-text" style="color:#FFFFFF; background-color:#000000">Time Tracker</li>
-            <li><a href="/" style="color:#FFFFFF; background-color:#000000">Home</a></li>
-            <li><a href="/calendar/x" style="color:#FFFFFF; background-color:#000000">Calendar</a></li>
-            <li><a href="/timesheet" style="color:#FFFFFF; background-color:#000000">Timesheet</a></li>
+            <li class="menu-text">Time Tracker</li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/calendar/x">Calendar</a></li>
+            <li><a href="/timesheet">Timesheet</a></li>
           </ul>
         </div>
-        <div class="top-bar-right" style="color:#FFFFFF; background-color:#000000">
-          <ul class="menu" style="color:#FFFFFF; background-color:#000000">
+        <div class="top-bar-right">
+          <ul class="menu">
             {% if user.is_authenticated %}
-            <li><a href="/profile/" style="color:#FFFFFF; background-color:#000000">Your Profile</a></li>
+            <li><a href="/profile/">Your Profile</a></li>
             <li><a href="/logout/" class="button expanded">Log Out</a></li>
             {% else %}
             <li><a href="/login/" class="button expanded">Log In or Register</a></li>

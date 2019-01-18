@@ -1,3 +1,41 @@
+body {
+  background-color: #262626;
+}
+
+h1 {
+  color: #fefefe;
+}
+
 .button {
+  color: #FFFFFF;
+  background-color: #1daf06;
+  border-radius: 20em;
+}
+
+.button:hover {
+  background-color: #1daf06;
+  opacity: 0.8;
+}
+
+.button:focus {
+  color: #FFFFFF;
+  background-color: #1daf06;
+}
+.top-bar {
+  background-color:#000000;
+  color:#FFFFFF;
+}
+
+.dropdown.menu {
+  background-color:#000000;
+  color:#FFFFFF;
+}
+
+.card {
+  border-color: #262626;
+  border-radius: 1em;
+}
+
+.card-divider {
   background-color: #1daf06;
 }
