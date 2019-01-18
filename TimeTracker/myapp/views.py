@@ -23,6 +23,7 @@ def register(request):
         if registration_form.is_valid():
             registration_form.save(commit=True)
             return redirect("/")
+    else:
         registration_form = forms.RegistrationForm()
     context = {
         "form":registration_form
