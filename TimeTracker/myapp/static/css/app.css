@@ -2,11 +2,9 @@ body {
   background-color: #262626;
   font-family: 'Poppins', sans-serif;
 }
-
 p {
   font-family: 'Poppins', sans-serif;
 }
-
 h1, h2, h3, h4 {
   color: #FFFFFF;
   font-family: 'Poppins', sans-serif;
@@ -23,12 +21,6 @@ a {
   border-radius: 20em;
 }
 
-.button.expanded {
-  color: #FFFFFF;
-  background-color: #1daf06;
-  border-radius: 20em;
-}
-
 .button:hover {
   background-color: #1daf06;
   opacity: 0.8;
@@ -36,6 +28,32 @@ a {
 
 .button:focus {
   color: #FFFFFF;
+  background-color: #1daf06;
+  border-radius: 20em;
+}
+
+.button.expanded {
+  color: #FFFFFF;
+  background-color: #1daf06;
+  border-radius: 20em;
+}
+
+.top-bar {
+  background-color:#000000;
+  color:#FFFFFF;
+}
+
+.dropdown.menu {
+  background-color:#000000;
+  color:#FFFFFF;
+}
+
+.card {
+  border-color: #262626;
+  border-radius: 1em;
+}
+
+.card-divider {
   background-color: #1daf06;
 }
 
