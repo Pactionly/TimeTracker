@@ -1,7 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-
   <!--
   <h1>
     <meta charset="utf-8">
@@ -12,22 +11,20 @@
 
   <body>
       <!-- <div class="top-bar" style="color:#FFFFFF; background-color:#000000"> 
+      <div class="top-bar" style="color:#FFFFFF; background-color:#000000">
         <div class="top-bar-left" style="color:#FFFFFF; background-color:#000000"> -->
-
           <ul class="dropdown menu" data-dropdown-menu style="color:#FFFFFF; background-color:#000000">
             <li class="menu-text" style="color:#FFFFFF; background-color:#000000">Time Tracker Calendar</li>
             <li><a href="/" style="color:#FFFFFF; background-color:#000000">Home</a></li>
             <li><a href="/calendar/" style="color:#FFFFFF; background-color:#000000">Add Event To Calendar</a></li>
             <li><a href="/timesheet" style="color:#FFFFFF; background-color:#000000">Timesheet</a></li>
+            <li><button id="authorize_button" class ="button" style="display: none;color:#FFFFFF;">Authorize</button></li>
+            <li><button id="signout_button" class ="button" style="display: none;">Sign Out</button></li>
           </ul>
+        </div>
+      </div>
 
-    <h1>Next Ten Events</h1>
-
-    <!--Add buttons to initiate auth sequence and sign out-->
-    <button id="authorize_button" class ="button" style="display: none;color:#FFFFFF;">Authorize</button>
-    <button id="signout_button" class ="button" style="display: none;">Sign Out</button>
-
-    <!-- looks like it uses the text from the javascript?-->
+    <!-- This is where the text prints out from the appendPre function in js file-->
     <pre id="content" style="white-space: pre-wrap;"></pre>
 
     <script src="{% static "js/vendor/outputCalText.js" %}"></script>
