@@ -31,9 +31,12 @@ gapi.client.init({
   scope: SCOPES
 }).then(function () {
   // Listen for sign-in state changes.
+  //listen() passes the current state of the user 
+  //(true for signed in) as an argument to the updateSigninStatus function on line 51 
   gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
 
   // Handle the initial sign-in state.
+  // This handles the loading of the correct button if the status wasn't changed between page loads
   updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
   authorizeButton.onclick = handleAuthClick;
   signoutButton.onclick = handleSignoutClick;
@@ -45,15 +48,26 @@ gapi.client.init({
 /**
 *  Called when the signed in status changes, to update the UI
 *  appropriately. After a sign-in, the API is called.
+*  Authorize is default to on in the html which is why the button always appears as authorize
+*  before switching to sign out if necessary.
 */
 function updateSigninStatus(isSignedIn) {
 if (isSignedIn) {
   authorizeButton.style.display = 'none';
   signoutButton.style.display = 'block';
   listUpcomingEvents();
+//  var pre = document.getElementById('content');
+//  if(pre.hasChildNodes() == false){
+//  appendPre("Authorize Google Calendar Use");
+//  }
 } else {
   authorizeButton.style.display = 'block';
   signoutButton.style.display = 'none';
+  var pre = document.getElementById('content');
+  if(pre.hasChildNodes() == false){
+  appendPre("Authorize Google Calendar Use");
+  }
+//  appendPre("Authorize Google Calendar Use");
 }
 }
 
@@ -62,6 +76,8 @@ if (isSignedIn) {
 */
 function handleAuthClick(event) {
 gapi.auth2.getAuthInstance().signIn();
+var pre = document.getElementById('content');
+pre.removeChild(pre.childNodes[0]);
 }
 
 /**
@@ -69,6 +85,18 @@ gapi.auth2.getAuthInstance().signIn();
 */
 function handleSignoutClick(event) {
 gapi.auth2.getAuthInstance().signOut();
+var pre = document.getElementById('content');
+if ( pre.hasChildNodes() )
+{
+    var nodeCount = pre.childNodes.length;
+    for(var i=0; i < nodeCount; i++)
+    {
+            pre.removeChild(pre.childNodes[0]);
+    } 
+}
+if(pre.hasChildNodes() == false){
+appendPre("Authorize Google Calendar Use");
+}
 }
 
 /**
@@ -87,6 +115,7 @@ pre.appendChild(textContent);
 * Print the summary and start datetime/date of the next ten events in
 * the authorized user's calendar. If no events are found an
 * appropriate message is printed.
+* timeMin says that the earliest event that can be printed must be after the current date and time
 */
 function listUpcomingEvents() {
 gapi.client.calendar.events.list({
@@ -98,19 +127,41 @@ gapi.client.calendar.events.list({
   'orderBy': 'startTime'
 }).then(function(response) {
   var events = response.result.items;
+  var pre = document.getElementById('content');
+  //pre.removeChild(pre.childNodes[0]);
   appendPre('Upcoming events:');
 
   if (events.length > 0) {
     for (i = 0; i < events.length; i++) {
       var event = events[i];
       var when = event.start.dateTime;
+      var date = new Date(when);
+      var dateNoTime = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
+      var time = getClockTime(date);
+
       if (!when) {
 	when = event.start.date;
       }
-      appendPre(event.summary + ' (' + when + ')')
+
+      appendPre(event.summary + ' (' + dateNoTime + ' ' + time + ')' )
     }
   } else {
     appendPre('No upcoming events found.');
   }
 });
+}
+
+function getClockTime(now){
+   var hour   = now.getHours();
+   var minute = now.getMinutes();
+   var second = now.getSeconds();
+   var ap = "AM";
+   if (hour   > 11) { ap = "PM";             }
+   if (hour   > 12) { hour = hour - 12;      }
+   if (hour   == 0) { hour = 12;             }
+   if (hour   < 10) { hour   = "0" + hour;   }
+   if (minute < 10) { minute = "0" + minute; }
+   if (second < 10) { second = "0" + second; }
+   var timeString = hour + ':' + minute + ':' + second + " " + ap;
+   return timeString;
 }
