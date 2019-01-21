@@ -8,6 +8,8 @@
     <title>{% block title %}TimeTracker{% endblock %}</title>
     <link rel="stylesheet" href="{% static "css/foundation.css" %}">
     <link rel="stylesheet" href="{% static "css/app.css" %}">
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+    <link rel="shortcut icon" href="{% static 'media/favicon.ico' %}" type="image/png">
   </head>
   <body>
     <div class="off-canvas position-left" id="offCanvas" data-off-canvas>
@@ -32,7 +34,7 @@
           </ul>
         </div>
         <div class="top-bar-right" style="color:#FFFFFF; background-color:#000000;">
-          <ul class="menu">
+          <ul class="menu" style="background-color: #000000;">
             {% if user.is_authenticated %}
             <li><a href="/profile/">Your Profile</a></li>
             <li><a href="/logout/" class="button expanded">Log Out</a></li>

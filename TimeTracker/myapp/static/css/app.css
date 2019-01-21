@@ -1,9 +1,15 @@
 body {
   background-color: #262626;
+  font-family: 'Poppins', sans-serif;
 }
 
-h1 {
-  color: #000000;
+p {
+  font-family: 'Poppins', sans-serif;
+}
+
+h1, h2, h3, h4 {
+  color: #FFFFFF;
+  font-family: 'Poppins', sans-serif;
 }
 
 a {
@@ -12,6 +18,12 @@ a {
 }
 
 .button {
+  color: #FFFFFF;
+  background-color: #1daf06;
+  border-radius: 20em;
+}
+
+.button.expanded {
   color: #FFFFFF;
   background-color: #1daf06;
   border-radius: 20em;
