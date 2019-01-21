@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
-import datetime
+from datetime import datetime
 import google_auth_oauthlib.flow
 
 from . import forms
@@ -26,7 +26,7 @@ def rest_clock_in(request):
     time_zone = pytz.timezone('America/Los_Angeles')
     request.user.ClockInModel.time = time_zone.localize(datetime.now())
     request.user.ClockInModel.save()
-    return HttpResponse('Success')
+    return redirect('/')
 
 @login_required
 def rest_clock_out(request):
@@ -83,17 +83,20 @@ def rest_clock_out(request):
     request.user.ClockInModel.time = None
     request.user.ClockInModel.save()
     return redirect('/')
+
 def index(request):
     """Render homepage"""
-    pressed = False
-    now = datetime.datetime.now()
+    clocked_in = request.user and hasattr(request.user, 'ClockInModel') and request.user.ClockInModel.time
+    now = datetime.now()
+    sheet_form = forms.TimesheetForm()
     seconds_worked = util.current_seconds_worked(request.user)
     minutes_worked = seconds_worked / 60
     hours_worked = round(minutes_worked // 60)
     minutes_worked = round(minutes_worked % 60)
     context = {
-        'pressed': pressed,
+        'clocked_in': clocked_in,
         'now': now,
+        'sheet_form': sheet_form,
         'minutes_worked': minutes_worked,
         'hours_worked': hours_worked,
     }

@@ -26,10 +26,21 @@
             <h4 class="text-center" style="color: white;"><strong>{{ now }}</strong></h4>
           </div>
           <div class="card-section">
-            {% if pressed %}
-              <button method="POST" type="button" class="alert button expanded">Clock out</button>
+            {% if not clocked_in %}
+              <form action="/clock_in/" method="post">
+                {% csrf_token %}
+                <input type="submit" class="button expanded" value="Clock In">
+              </form>
             {% else %}
-              <button method="POST" type="button" class="success button expanded">Clock in</button>
+              <form action="/clock_out/" method="post">
+                {% csrf_token %}
+                {{ sheet_form.sheet_id.label_tag }}
+                {{ sheet_form.sheet_id }}
+                {{ sheet_form.activity.label_tag }}
+                {{ sheet_form.activity }}
+                {{ sheet_form.comments.label_tag }}
+                {{ sheet_form.comments }}
+                <input type="submit" class="alert button expanded" value="Clock Out">
             {% endif %}
           </div>
         </div>
@@ -42,7 +53,7 @@
             <h4>Your time today</h4>
           </div>
           <div class="card-section">
-            <h2 stype="color: #000000;"><strong>{{ hours_worked }}</strong> hours <strong>{{ minutes_worked }}</strong> minutes worked today</h2>
+            <h2 style="color: #000000;"><strong>{{ hours_worked }}</strong> hours <strong>{{ minutes_worked }}</strong> minutes worked today</h2>
           </div>
 
           <div class="card-section">
