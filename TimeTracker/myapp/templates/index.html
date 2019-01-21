@@ -1,40 +1,103 @@
 {% extends "base.html" %}
 {% load static %}
 {% block body %}
-  <body>
-    <div class="grid-container">
-      <div class="grid-y grid-padding-y">
-        <div class="cell small-12 medium-12 large-12 offset-2">
-          <h1>Welcome to Time Tracker</h1>
-        <div>
+<body>
+  <div class="grid-container">
+
+    {% if user.is_authenticated %}
+
+    <!-- Banner -->
+    <div class="grid-y grid-padding-y">
+      <div class="cell small-12 medium-12 large-12 offset-2">
+        <h1>Welcome to Time Tracker</h1>
       </div>
-      <div class="grid-x grid-padding-x small-up-1 medium-up-2 large-up-3">
-        <div class="cell">
-          <div class="card">
-            <div class="card-divider">
-              <h4>Timesheet</h4>
-            </div>
-            <img src="{% static "media/timesheet.png" %}">
+    </div>
+
+    <!-- Info cards -->
+    <div class="grid-x grid-padding-x">
+
+      <!-- Clock in and out -->
+      <div class="cell large-4 small-12">
+        <div class="card">
+          <div class="card-divider">
+            <h4>Clock in & out</h4>
           </div>
-        </div>
-        <div class="cell">
-          <div class="card">
-            <div class="card-divider">
-              <h4>Calendar</h4>
-            </div>
-            <img src="{% static "media/calendar.png" %}">
+          <div class="card-section" style="background: #3B9DD1;">
+            <h4 class="text-center" style="color: white;"><strong>{{ now }}</strong></h4>
           </div>
-        </div>
-        <div class="cell">
-          <div class="card">
-            <div class="card-divider">
-              <h4>Profile</h4>
-            </div>
-            <img src="{% static "media/profile.png" %}">
+          <div class="card-section">
+            {% if pressed %}
+              <button method="POST" type="button" class="alert button expanded">Clock out</button>
+            {% else %}
+              <button method="POST" type="button" class="success button expanded">Clock in</button>
+            {% endif %}
           </div>
         </div>
       </div>
 
+      <!-- Current working time -->
+      <div class="cell large-8 small-12">
+        <div class="card">
+          <div class="card-divider">
+            <h4>Your time today</h4>
+          </div>
+          <div class="card-section">
+            <h2><strong>3</strong> hours <strong>21</strong> minutes worked today</h2>
+          </div>
+
+          <div class="card-section">
+            <h3>You've worked <strong>18</strong> hours this pay period</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Calendar Events -->
+      <div class="cell large-4 small-12">
+        <div class="card">
+          <div class="card-divider">
+            <h4>Calendar<h4>
+          </div>
+          <div class="card-section">
+            <!-- This is where the text prints out from the appendPre function in js file-->
+            <p id="content" style="white-space: pre-wrap;"></p>
+            <script src="{% static "js/vendor/outputCalText.js" %}"></script>
+            <script async defer src="https://apis.google.com/js/api.js"
+              onload="this.onload=function(){};handleClientLoad()"
+              onreadystatechange="if (this.readyState === 'complete') this.onload()">
+            </script>
+          </div>
+        </div>
+      </div>
+
+      <!-- Graphs -->
+      <div class="cell large-8 small-12">
+        <div class="card">
+          <div class="card-divider">
+            <h4>Graphs</h4>
+          </div>
+          <div class="card-section">
+            <img src="http://www.falconprogrammer.com/wp-content/uploads/2013/12/LineGraph.png" class="float-center">
+          </div>
+        </div>
+      </div>
+
+      {% else %}
+      <div class="grid-y grid-padding-y">
+        <div class="cell small-12 medium-12 large-12 offset-2">
+          <h1>Welcome to Time Tracker, login to get started</h1>
+        </div>
+      </div>
+      {% endif %}
     </div>
-  </body>
+  </div>
+
+  {% else %}
+  <div class="grid-y grid-padding-y">
+    <div class="cell small-12 medium-12 large-12 offset-2">
+      <h1>Welcome to Time Tracker, login to get started</h1>
+    </div>
+  </div>
+  {% endif %}
+  </div>
+</body>
 {% endblock %}
