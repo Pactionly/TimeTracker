@@ -13,4 +13,5 @@ urlpatterns = [
     path('logout/', views.logout_view),
     path('timesheet/', views.sheets),
     path('clock_out/', views.rest_clock_out),
+    path('clock_in/', views.rest_clock_in),
 ]
