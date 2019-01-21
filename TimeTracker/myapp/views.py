@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
+import datetime
 import google_auth_oauthlib.flow
 
 from . import forms
@@ -88,7 +89,10 @@ def rest_clock_out(request):
     return redirect('/')
 def index(request):
     """Render homepage"""
-    context = {}
+    now = datetime.datetime.now()
+    context = {
+        'now': now
+    }
     return render(request, 'index.html', context)
 
 def register(request):
