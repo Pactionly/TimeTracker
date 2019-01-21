@@ -8,7 +8,6 @@ from django.http import HttpResponse
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
-from datetime import datetime
 import google_auth_oauthlib.flow
 
 from . import forms
@@ -86,7 +85,11 @@ def rest_clock_out(request):
 
 def index(request):
     """Render homepage"""
-    clocked_in = request.user and hasattr(request.user, 'ClockInModel') and request.user.ClockInModel.time
+    clocked_in = (
+        request.user
+        and hasattr(request.user, 'ClockInModel')
+        and request.user.ClockInModel.time
+    )
     now = datetime.now()
     sheet_form = forms.TimesheetForm()
     seconds_worked = util.current_seconds_worked(request.user)
