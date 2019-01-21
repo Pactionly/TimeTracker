@@ -36,13 +36,9 @@ def rest_clock_out(request):
         return HttpResponse('Invalid Method')
     if not request.user.ClockInModel.time:
         return HttpResponse('Not Clocked In')
-    time_zone = pytz.timezone('America/Los_Angeles')
-    now = time_zone.localize(datetime.now())
-    time_diff = now - request.user.ClockInModel.time
-    seconds_worked = time_diff.total_seconds()
-    hours_worked = seconds_worked / 3600
-    hours_worked = round(hours_worked * 4) / 4
-    date_str = now.strftime("%m/%d")
+    # Hours Worked Rounded to nearest quarter hour
+    hours_worked = round(util.current_seconds_worked(request.user) / 900) / 4
+
     clock_out_form = forms.TimesheetForm(request.POST)
     if not clock_out_form.is_valid():
         return HttpResponse('Invalid Form')
@@ -52,7 +48,7 @@ def rest_clock_out(request):
     # pylint: disable=no-member
     sheet_info = service.spreadsheets().get(spreadsheetId=clock_out_form.cleaned_data['sheet_id']).execute()
     body = {'values':[[
-        date_str,
+        util.current_day(),
         clock_out_form.cleaned_data['activity'],
         hours_worked,
         clock_out_form.cleaned_data['comments']
