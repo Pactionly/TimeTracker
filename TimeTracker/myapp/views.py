@@ -113,6 +113,11 @@ def logout_view(request):
     return redirect("/login/")
 
 @login_required
+def profile(request):
+    context = {}
+    return render(request, 'profile.html', context)
+
+@login_required
 def sheets(request):
     """View to display sheet update form"""
     if request.method == 'POST':
