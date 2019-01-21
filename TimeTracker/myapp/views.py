@@ -5,11 +5,11 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
 import google_auth_oauthlib.flow
-from googleapiclient.discovery import build
-from oauth2client import client, GOOGLE_TOKEN_URI, GOOGLE_REVOKE_URI
 
 from . import forms
 from . import models
+from . import util
+
 
 def index(request):
     """Render homepage"""
@@ -23,6 +23,7 @@ def register(request):
         if registration_form.is_valid():
             registration_form.save(commit=True)
             return redirect("/")
+    else:
         registration_form = forms.RegistrationForm()
     context = {
         "form":registration_form
@@ -40,8 +41,23 @@ def sheets(request):
     if request.method == 'POST':
         sheet_form = forms.TimesheetForm(request.POST)
         if sheet_form.is_valid():
-            # pylint: disable=fixme
-            # TODO Make API calls
+            service = util.authenticate(request.user, 'sheets', 'v4')
+            if not service:
+                return redirect('/begin_google_auth')
+            sheet_range = 'Sheet2!B3:E3'
+            body = {'values': [[
+                'TestDate',
+                sheet_form.cleaned_data['activity'],
+                '8',
+                sheet_form.cleaned_data['comments']
+            ]]}
+            # pylint: disable=no-member
+            service.spreadsheets().values().update(
+                spreadsheetId=sheet_form.cleaned_data['sheet_id'],
+                valueInputOption='USER_ENTERED',
+                range=sheet_range,
+                body=body
+            ).execute()
             return redirect('/')
     else:
         sheet_form = forms.TimesheetForm()
@@ -51,7 +67,7 @@ def sheets(request):
     return render(request, 'timesheet.html', context=context)
 
 @login_required
-def sheets_view(request):
+def begin_google_auth(request):
     """Google Authentication"""
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
         '/code/client_secret',
@@ -83,26 +99,5 @@ def sheets_auth(request):
             refresh_key=credentials.refresh_token
         )
         token.save()
-    credentials = client.OAuth2Credentials(
-        access_token=None,
-        client_id=credentials.client_id,
-        client_secret=credentials.client_secret,
-        refresh_token=request.user.AuthModel.refresh_key,
-        token_expiry=None,
-        token_uri=GOOGLE_TOKEN_URI,
-        user_agent=None,
-        revoke_uri=GOOGLE_REVOKE_URI
-    )
-    service = build('sheets', 'v4', credentials=credentials)
-    # Call the Sheets API
-    file_id = '1JuoSIWuGtA5S_KDx4NX7f_eJs_GsdgO5W0rjdzQgNVg'
-    # pylint: disable=no-member
-    sheet = service.spreadsheets()
-    sheet_range = 'Sheet2!B3:E3'
-    body = {'values':[['1/15', 'Testing Output', 'TestHours', 'Debug']]}
-    sheet.values().update(
-        spreadsheetId=file_id,
-        valueInputOption='USER_ENTERED',
-        range=sheet_range, body=body).execute()
 
     return redirect('/')
