@@ -1,6 +1,10 @@
 """Defines rendering logic for views"""
 
+from datetime import datetime
+import pytz
+
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
@@ -11,6 +15,77 @@ from . import models
 from . import util
 
 
+@login_required
+def rest_clock_in(request):
+    """ REST API for clock in requests"""
+    if request.method != 'POST':
+        return HttpResponse('Invalid Method')
+    if request.user.ClockInModel.time:
+        return HttpResponse('Already Clocked In')
+    time_zone = pytz.timezone('America/Los_Angeles')
+    request.user.ClockInModel.time = time_zone.localize(datetime.now())
+    request.user.ClockInModel.save()
+    return HttpResponse('Success')
+
+@login_required
+def rest_clock_out(request):
+    """ REST API for clock out requests
+        Requires Timesheet Form"""
+    if request.method != 'POST':
+        return HttpResponse('Invalid Method')
+    if not request.user.ClockInModel.time:
+        return HttpResponse('Not Clocked In')
+    time_zone = pytz.timezone('America/Los_Angeles')
+    now = time_zone.localize(datetime.now())
+    time_diff = now - request.user.ClockInModel.time
+    seconds_worked = time_diff.total_seconds()
+    hours_worked = seconds_worked / 3600
+    hours_worked = round(hours_worked * 4) / 4
+    date_str = now.strftime("%m/%d")
+    clock_out_form = forms.TimesheetForm(request.POST)
+    if not clock_out_form.is_valid():
+        return HttpResponse('Invalid Form')
+
+    service = util.authenticate(request.user, 'sheets', 'v4')
+    # pylint: disable=line-too-long
+    # pylint: disable=no-member
+    sheet_info = service.spreadsheets().get(spreadsheetId=clock_out_form.cleaned_data['sheet_id']).execute()
+    body = {'values':[[
+        date_str,
+        clock_out_form.cleaned_data['activity'],
+        hours_worked,
+        clock_out_form.cleaned_data['comments']
+    ]]}
+    insert_body = {'requests': [
+        {
+            "insertDimension": {
+                "range": {
+                    "sheetId": sheet_info['sheets'][1]['properties']['sheetId'],
+                    "dimension": "ROWS",
+                    "startIndex": 1,
+                    "endIndex": 2
+                },
+                "inheritFromBefore": False
+            }
+        }
+    ]}
+    # pylint: disable=no-member
+    service.spreadsheets().batchUpdate(
+        spreadsheetId=clock_out_form.cleaned_data['sheet_id'],
+        body=insert_body
+    ).execute()
+
+    sheet_range = 'Sheet2!B3:E3'
+    # pylint: disable=no-member
+    service.spreadsheets().values().update(
+        spreadsheetId=clock_out_form.cleaned_data['sheet_id'],
+        valueInputOption='USER_ENTERED',
+        range=sheet_range,
+        body=body
+    ).execute()
+    request.user.ClockInModel.time = None
+    request.user.ClockInModel.save()
+    return redirect('/')
 def index(request):
     """Render homepage"""
     context = {}
