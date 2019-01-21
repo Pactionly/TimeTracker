@@ -1,27 +1,30 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Google Calendar API Quickstart</title>
-    <meta charset="utf-8" />
-  </head>
+  <!--
+  <h1>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+  </h1>
+  -->
+
   <body>
+      <!-- <div class="top-bar" style="color:#FFFFFF; background-color:#000000"> 
       <div class="top-bar" style="color:#FFFFFF; background-color:#000000">
-        <div class="top-bar-left" style="color:#FFFFFF; background-color:#000000">
+        <div class="top-bar-left" style="color:#FFFFFF; background-color:#000000"> -->
           <ul class="dropdown menu" data-dropdown-menu style="color:#FFFFFF; background-color:#000000">
             <li class="menu-text" style="color:#FFFFFF; background-color:#000000">Time Tracker Calendar</li>
             <li><a href="/" style="color:#FFFFFF; background-color:#000000">Home</a></li>
             <li><a href="/calendar/" style="color:#FFFFFF; background-color:#000000">Add Event To Calendar</a></li>
             <li><a href="/timesheet" style="color:#FFFFFF; background-color:#000000">Timesheet</a></li>
+            <li><button id="authorize_button" class ="button" style="display: none;color:#FFFFFF;">Authorize</button></li>
+            <li><button id="signout_button" class ="button" style="display: none;">Sign Out</button></li>
           </ul>
         </div>
       </div>
-    <p>Google Calendar API Quickstart</p>
 
-    <!--Add buttons to initiate auth sequence and sign out-->
-    <button id="authorize_button" style="display: none;">Authorize</button>
-    <button id="signout_button" style="display: none;">Sign Out</button>
-
+    <!-- This is where the text prints out from the appendPre function in js file-->
     <pre id="content" style="white-space: pre-wrap;"></pre>
 
     <script src="{% static "js/vendor/outputCalText.js" %}"></script>
@@ -29,5 +32,6 @@
       onload="this.onload=function(){};handleClientLoad()"
       onreadystatechange="if (this.readyState === 'complete') this.onload()">
     </script>
+    <link rel="stylesheet" href="{% static "css/foundation.css" %}">
   </body>
 </html>
