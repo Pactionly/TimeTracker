@@ -26,7 +26,11 @@
             <h4 class="text-center" style="color: white;"><strong>{{ now }}</strong></h4>
           </div>
           <div class="card-section">
-            <button type="button" class="button expanded">Clock in</button>
+            {% if pressed %}
+              <button method="POST" type="button" class="alert button expanded">Clock out</button>
+            {% else %}
+              <button method="POST" type="button" class="success button expanded">Clock in</button>
+            {% endif %}
           </div>
         </div>
       </div>

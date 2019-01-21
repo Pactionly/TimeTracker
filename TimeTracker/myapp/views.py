@@ -89,8 +89,10 @@ def rest_clock_out(request):
     return redirect('/')
 def index(request):
     """Render homepage"""
+    pressed = False
     now = datetime.datetime.now()
     context = {
+        'pressed': pressed,
         'now': now
     }
     return render(request, 'index.html', context)
