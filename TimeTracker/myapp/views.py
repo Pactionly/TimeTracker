@@ -2,6 +2,8 @@
 
 from datetime import datetime, timezone
 import pytz
+import json
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import logout
@@ -22,6 +24,7 @@ def rest_clock_in(request):
         return HttpResponse('Already Clocked In')
     timezone = pytz.timezone('America/Los_Angeles')
     request.user.ClockInModel.time = timezone.localize(datetime.now())
+    request.user.ClockInModel.save()
     return HttpResponse('Success') 
 
 
@@ -40,6 +43,9 @@ def rest_clock_out(request):
     clock_out_form = forms.TimesheetForm(request.POST)
     if not clock_out_form.is_valid():
         return HttpResponse('Invalid Form')
+    
+    service = util.authenticate(request.user, 'sheets', 'v4')  
+    sheet_info = service.spreadsheets().get(spreadsheetId=clock_out_form.cleaned_data['sheet_id']).execute()
     body = {'values':[[
         date_str,
         clock_out_form.cleaned_data['activity'],
@@ -50,7 +56,7 @@ def rest_clock_out(request):
         {
             "insertDimension": {
                 "range": {
-                    "sheetId": clock_out_form.cleaned_data['sheet_id'],
+                    "sheetId": sheet_info['sheets'][1]['properties']['sheetId'],
                     "dimension": "ROWS",
                     "startIndex": 1,
                     "endIndex": 2
@@ -59,7 +65,7 @@ def rest_clock_out(request):
             }
         }
     ]}
-    service = util.authenticate(request.user, 'sheets', 'v4')
+    
     service.spreadsheets().batchUpdate(
         spreadsheetId=clock_out_form.cleaned_data['sheet_id'],
         body=insert_body
@@ -67,12 +73,13 @@ def rest_clock_out(request):
 
     sheet_range = 'Sheet2!B3:E3'
     service.spreadsheets().values().update(
-        spreadsheetId=sheet_form.cleaned_data['sheet_id'],
+        spreadsheetId=clock_out_form.cleaned_data['sheet_id'],
         valueInputOption='USER_ENTERED',
         range=sheet_range,
         body=body
     ).execute()
-    
+    request.user.ClockInModel.time = None    
+    request.user.ClockInModel.save()
     return redirect('/')
 def index(request):
     """Render homepage"""
