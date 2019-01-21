@@ -1,3 +1,5 @@
+"""Defines models to show in admin view"""
+
 from django.contrib import admin
 from . import models
 

@@ -1,8 +1,7 @@
 """Defines rendering logic for views"""
 
-from datetime import datetime, timezone
+from datetime import datetime
 import pytz
-import json
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -16,25 +15,28 @@ from . import models
 from . import util
 
 
-
+@login_required
 def rest_clock_in(request):
+    """ REST API for clock in requests"""
     if request.method != 'POST':
         return HttpResponse('Invalid Method')
     if request.user.ClockInModel.time:
         return HttpResponse('Already Clocked In')
-    timezone = pytz.timezone('America/Los_Angeles')
-    request.user.ClockInModel.time = timezone.localize(datetime.now())
+    time_zone = pytz.timezone('America/Los_Angeles')
+    request.user.ClockInModel.time = time_zone.localize(datetime.now())
     request.user.ClockInModel.save()
-    return HttpResponse('Success') 
+    return HttpResponse('Success')
 
-
+@login_required
 def rest_clock_out(request):
+    """ REST API for clock out requests
+        Requires Timesheet Form"""
     if request.method != 'POST':
         return HttpResponse('Invalid Method')
     if not request.user.ClockInModel.time:
         return HttpResponse('Not Clocked In')
-    timezone = pytz.timezone('America/Los_Angeles')
-    now = timezone.localize(datetime.now())
+    time_zone = pytz.timezone('America/Los_Angeles')
+    now = time_zone.localize(datetime.now())
     time_diff = now - request.user.ClockInModel.time
     seconds_worked = time_diff.total_seconds()
     hours_worked = seconds_worked / 3600
@@ -43,8 +45,10 @@ def rest_clock_out(request):
     clock_out_form = forms.TimesheetForm(request.POST)
     if not clock_out_form.is_valid():
         return HttpResponse('Invalid Form')
-    
-    service = util.authenticate(request.user, 'sheets', 'v4')  
+
+    service = util.authenticate(request.user, 'sheets', 'v4')
+    # pylint: disable=line-too-long
+    # pylint: disable=no-member
     sheet_info = service.spreadsheets().get(spreadsheetId=clock_out_form.cleaned_data['sheet_id']).execute()
     body = {'values':[[
         date_str,
@@ -65,20 +69,21 @@ def rest_clock_out(request):
             }
         }
     ]}
-    
+    # pylint: disable=no-member
     service.spreadsheets().batchUpdate(
         spreadsheetId=clock_out_form.cleaned_data['sheet_id'],
         body=insert_body
     ).execute()
 
     sheet_range = 'Sheet2!B3:E3'
+    # pylint: disable=no-member
     service.spreadsheets().values().update(
         spreadsheetId=clock_out_form.cleaned_data['sheet_id'],
         valueInputOption='USER_ENTERED',
         range=sheet_range,
         body=body
     ).execute()
-    request.user.ClockInModel.time = None    
+    request.user.ClockInModel.time = None
     request.user.ClockInModel.save()
     return redirect('/')
 def index(request):
