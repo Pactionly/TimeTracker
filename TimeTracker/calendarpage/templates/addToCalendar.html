@@ -10,6 +10,8 @@
          <li><a href="/" style="color:#FFFFFF; background-color:#000000">Home</a></li>
          <li><a href="/calendar/x/" style="color:#FFFFFF; background-color:#000000">Calendar Home Page</a></li>
          <li><a href="/timesheet" style="color:#FFFFFF; background-color:#000000">Timesheet</a></li>
+         <li><button id="authorize_button" class ="button" style="display: none;color:#FFFFFF;">Authorize</button></li>
+         <li><button id="signout_button" class ="button" style="display: none;">Sign Out</button></li>
        </ul>
      </div>
 </body>
@@ -26,8 +28,12 @@
     <p><button id="addToCalendar" class="button" style="visibility: hidden">Add to Google Calendar</button></p>
   </div>
     <!--Add a button for the user to click to initiate auth sequence -->
-    <script src="{% static "js/vendor/addToCalendar.js" %}"></script>
-    <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
+    <script src="{% static "js/vendor/xaTC.js" %}"></script>
+    <script async defer src="https://apis.google.com/js/api.js"
+      onload="this.onload=function(){};handleClientLoad()"
+      onreadystatechange="if (this.readyState === 'complete') this.onload()">
+    </script>
+    <!-- <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script> -->
     <link rel="stylesheet" href="{% static "css/foundation.css" %}">
   </body>
 </html>
