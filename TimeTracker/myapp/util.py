@@ -32,9 +32,11 @@ def authenticate(user, api, version):
 
 def current_seconds_worked(user):
     """Returns the number of seconds worked since clocking in"""
-    now = pytz.timezone('America/Los_Angeles').localize(datetime.now())
-    time_diff = now - user.ClockInModel.time
-    return time_diff.total_seconds()
+    if user and hasattr(user, 'ClockInModel') and user.ClockInModel.time:
+        now = pytz.timezone('America/Los_Angeles').localize(datetime.now())
+        time_diff = now - user.ClockInModel.time
+        return time_diff.total_seconds()
+    return 0
 
 def current_day():
     """Returns current day formatted as m/d"""

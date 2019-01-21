@@ -87,9 +87,15 @@ def index(request):
     """Render homepage"""
     pressed = False
     now = datetime.datetime.now()
+    seconds_worked = util.current_seconds_worked(request.user)
+    minutes_worked = seconds_worked / 60
+    hours_worked = round(minutes_worked // 60)
+    minutes_worked = round(minutes_worked % 60)
     context = {
         'pressed': pressed,
-        'now': now
+        'now': now,
+        'minutes_worked': minutes_worked,
+        'hours_worked': hours_worked,
     }
     return render(request, 'index.html', context)
 
