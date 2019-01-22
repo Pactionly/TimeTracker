@@ -110,24 +110,22 @@ appendPre("Authorize Google Calendar Use");
 function appendPre(message) {
 //document.getElementById('content').style.color = "blue";
 var pre = document.getElementById('content');
-var textContent = document.createTextNode(message + '\n');
+
+var res = message.split("(");
+
+var textContent = document.createTextNode(res[0] + '\n');
+var textContent2 = document.createTextNode(res[1] + '\n');
 
 var node = document.createElement("LI");
 node.appendChild(textContent);
+node.appendChild(textContent2);
 
 var att = document.createAttribute("style");
-att.value = "border-radius: 25px; padding: 20px; background: #73AD21; color: black;"; 
+var att2 = document.createAttribute("class");
+att.value = "list-style-type: none; border-style: solid; border-radius: 25px; padding: 20px; background: #73AD21; height: 75px; color: black;"; 
+att2.value = "no-bullets";
 node.setAttributeNode(att);
-
-/*
-#rcorners1 {
-  border-radius: 25px;
-  background: #73AD21;
-  padding: 20px; 
-  width: 200px;
-  height: 150px;  
-}
-*/
+node.setAttributeNode(att2);
 
 pre.appendChild(node);
 }
@@ -139,8 +137,8 @@ pre.appendChild(node);
 * timeMin says that the earliest event that can be printed must be after the current date and time
 */
 function listUpcomingEvents() {
-//var today = getCurrentDate();
-var today = "Tue Jan 22"; 
+var today = getCurrentDate();
+//var today = "Tue Jan 22"; 
 gapi.client.calendar.events.list({
   'calendarId': 'primary',
   'timeMin': (new Date()).toISOString(),
@@ -151,7 +149,7 @@ gapi.client.calendar.events.list({
 }).then(function(response) {
   var events = response.result.items;
   var pre = document.getElementById('content');
-  appendPre('Upcoming events:');
+  //appendPre('Upcoming events:');
 
   if (events.length > 0) {
     for (i = 0; i < events.length; i++) {
@@ -174,7 +172,7 @@ gapi.client.calendar.events.list({
 	when = event.start.date;
       }
 
-      appendPre(event.summary + ' (' + dateNoTime + ' ' + time + ' - ' + endTime + ')' )
+      appendPre(event.summary + ' (' + ' ' + time + ' - ' + endTime );
       }
     }
   } else {
