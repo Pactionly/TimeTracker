@@ -91,6 +91,8 @@ if ( pre.hasChildNodes() )
     var nodeCount = pre.childNodes.length;
     for(var i=0; i < nodeCount; i++)
     {
+//            var values = pre.childNodes[1].textContent;
+//            alert('the value is:' + values);
             pre.removeChild(pre.childNodes[0]);
     } 
 }
@@ -106,9 +108,26 @@ appendPre("Authorize Google Calendar Use");
 * @param {string} message Text to be placed in pre element.
 */
 function appendPre(message) {
+//document.getElementById('content').style.color = "blue";
 var pre = document.getElementById('content');
-var textContent = document.createTextNode(message + '\n');
-pre.appendChild(textContent);
+
+var res = message.split("(");
+
+var textContent = document.createTextNode(res[0] + '\n');
+var textContent2 = document.createTextNode(res[1] + '\n');
+
+var node = document.createElement("LI");
+node.appendChild(textContent);
+node.appendChild(textContent2);
+
+var att = document.createAttribute("style");
+var att2 = document.createAttribute("class");
+att.value = "list-style-type: none; border-style: solid; border-radius: 25px; padding: 20px; background: #73AD21; height: 75px; color: black;"; 
+att2.value = "no-bullets";
+node.setAttributeNode(att);
+node.setAttributeNode(att2);
+
+pre.appendChild(node);
 }
 
 /**
@@ -118,6 +137,8 @@ pre.appendChild(textContent);
 * timeMin says that the earliest event that can be printed must be after the current date and time
 */
 function listUpcomingEvents() {
+var today = getCurrentDate();
+//var today = "Tue Jan 22"; 
 gapi.client.calendar.events.list({
   'calendarId': 'primary',
   'timeMin': (new Date()).toISOString(),
@@ -128,22 +149,31 @@ gapi.client.calendar.events.list({
 }).then(function(response) {
   var events = response.result.items;
   var pre = document.getElementById('content');
-  //pre.removeChild(pre.childNodes[0]);
-  appendPre('Upcoming events:');
+  //appendPre('Upcoming events:');
 
   if (events.length > 0) {
     for (i = 0; i < events.length; i++) {
       var event = events[i];
       var when = event.start.dateTime;
       var date = new Date(when);
+      
+      var end = event.end.dateTime;
+      var endDate = new Date(end);
+      
+
+      var isToday = date.toString().substring(0, 10);
+
+      if(isToday == today){
       var dateNoTime = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
       var time = getClockTime(date);
+      var endTime = getClockTime(endDate);
 
       if (!when) {
 	when = event.start.date;
       }
 
-      appendPre(event.summary + ' (' + dateNoTime + ' ' + time + ')' )
+      appendPre(event.summary + ' (' + ' ' + time + ' - ' + endTime );
+      }
     }
   } else {
     appendPre('No upcoming events found.');
@@ -164,4 +194,10 @@ function getClockTime(now){
    if (second < 10) { second = "0" + second; }
    var timeString = hour + ':' + minute + ':' + second + " " + ap;
    return timeString;
+}
+
+function getCurrentDate(){
+  var today = new Date();
+  var subToday = today.toString().substring(0, 10);
+  return subToday;
 }
