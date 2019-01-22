@@ -92,7 +92,8 @@ def rest_clock_out(request):
 
 def index(request):
     """Render homepage"""
-
+    if not request.user.is_authenticated:
+        return redirect("/login")
     clocked_in = request.user.profile.clock_in_time is not None
     now = datetime.now()
     sheet_form = forms.TimesheetForm()
