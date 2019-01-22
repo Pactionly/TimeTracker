@@ -12,7 +12,6 @@ import google_auth_oauthlib.flow
 from oauth2client import client
 
 from . import forms
-from . import models
 from . import util
 
 
@@ -46,13 +45,13 @@ def rest_clock_out(request):
     service = util.authenticate(request.user, 'sheets', 'v4')
     if service is None:
         return redirect('/begin_google_auth')
-    
+
     try:
-    # pylint: disable=line-too-long
-    # pylint: disable=no-member
-    
+        # pylint: disable=line-too-long
+        # pylint: disable=no-member
+
         sheet_info = service.spreadsheets().get(spreadsheetId=clock_out_form.cleaned_data['sheet_id']).execute()
-    except client.HttpAccessTokenRefreshError as exc:
+    except client.HttpAccessTokenRefreshError:
         return redirect('/begin_google_auth')
     body = {'values':[[
         util.current_day(),
@@ -93,7 +92,7 @@ def rest_clock_out(request):
 
 def index(request):
     """Render homepage"""
-    
+
     clocked_in = request.user.profile.clock_in_time is not None
     now = datetime.now()
     sheet_form = forms.TimesheetForm()
