@@ -59,38 +59,7 @@
           <div class="card-section">
             <h3 style="color: #000000;">You've worked <strong>18</strong> hours this pay period</h3>
           </div>
-          <!-- <img src="{% static "media/timesheet.png" %}"> -->
         </div>
-      </div>
-      <!-- Calendar Events -->
-      <div class="cell large-4 small-12">
-        <div class="card">
-          <div class="card-divider">
-            <h4>Calendar<h4>
-          </div>
-          <div class="card-section">
-            <!-- This is where the text prints out from the appendPre function in js file-->
-            <p id="content" style="white-space: pre-wrap;"></p>
-            <script src="{% static "js/vendor/outputCalText.js" %}"></script>
-            <script async defer src="https://apis.google.com/js/api.js"
-              onload="this.onload=function(){};handleClientLoad()"
-              onreadystatechange="if (this.readyState === 'complete') this.onload()">
-            </script>
-          </div>
-          <!-- <img src="{% static "media/timesheet.png" %}"> -->
-        </div>
-      </div>
-
-      <!-- Graphs -->
-      <div class="cell large-8 small-12">
-        <div class="card">
-          <div class="card-divider">
-            <h4>Graphs</h4>
-          </div>
-          <div class="card-section">
-            <img src="http://www.falconprogrammer.com/wp-content/uploads/2013/12/LineGraph.png" class="float-center">
-          </div>
-        </div> -->
       </div>
 
       <!-- Calendar Events -->
@@ -110,6 +79,7 @@
           </div>
         </div>
       </div>
+
       <!-- Graphs -->
       <div class="cell large-8 small-12">
         <div class="card">
@@ -121,6 +91,7 @@
           </div>
         </div>
       </div>
+
   {% else %}
   <div class="grid-y grid-padding-y">
     <div class="cell small-12 medium-12 large-12 offset-2">
@@ -128,5 +99,6 @@
     </div>
   </div>
   {% endif %}
+  </div>
 </body>
 {% endblock %}
