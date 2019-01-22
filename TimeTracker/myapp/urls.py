@@ -11,5 +11,8 @@ urlpatterns = [
     path('login/', adminviews.LoginView.as_view()),
     path('register/', views.register),
     path('logout/', views.logout_view),
-    path('timesheet/', views.sheets)
+    path('timesheet/', views.sheets),
+    path('clock_out/', views.rest_clock_out),
+    path('profile/', views.profile),
+    path('clock_in/', views.rest_clock_in),
 ]

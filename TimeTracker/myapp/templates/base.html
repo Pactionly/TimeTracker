@@ -5,24 +5,38 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %}</title>
+    <title>{% block title %}TimeTracker{% endblock %}</title>
     <link rel="stylesheet" href="{% static "css/foundation.css" %}">
     <link rel="stylesheet" href="{% static "css/app.css" %}">
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+    <link rel="shortcut icon" href="{% static 'media/favicon.ico' %}" type="image/png">
   </head>
   <body>
-      <div class="top-bar" style="color:#FFFFFF; background-color:#000000">
-        <div class="top-bar-left" style="color:#FFFFFF; background-color:#000000">
-          <ul class="dropdown menu" data-dropdown-menu style="color:#FFFFFF; background-color:#000000">
-            <li class="menu-text" style="color:#FFFFFF; background-color:#000000">Time Tracker</li>
-            <li><a href="/" style="color:#FFFFFF; background-color:#000000">Home</a></li>
-            <li><a href="/calendar/x" style="color:#FFFFFF; background-color:#000000">Calendar</a></li>
-            <li><a href="/timesheet" style="color:#FFFFFF; background-color:#000000">Timesheet</a></li>
+    <div class="off-canvas position-left" id="offCanvas" data-off-canvas>
+      <ul class="vertical tabs" data-tabs id="example-tabs">
+        <li class="tabs-title is-active"><a href="#panel1v" aria-selected="true">Home</a></li>
+        <li class="tabs-title"><a href="/calendar/x">Calendar</a></li>
+        <li class="tabs-title"><a href="#panel3v">Timesheet</a></li>
+        <li class="tabs-title"><a href="#panel3v">Analytics</a></li>
+      </ul>
+    </div>
+    <div class="off-canvas-content" data-off-canvas-content>
+      <div class="top-bar">
+        <div class="top-bar-left">
+          <ul class="dropdown menu" data-dropdown-menu>
+            <li><button type="button" class="button" data-toggle="offCanvas">Menu</button></li>
+            <li class="menu-text">Time Tracker</li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/calendar/x">Calendar</a></li>
+            <li><a href="/timesheet">Timesheet</a></li>
+            <li><button id="authorize_button" class ="button" style="display: none;color:#FFFFFF;">Authorize</button></li>
+            <li><button id="signout_button" class ="button" style="display: none;">Sign Out</button></li>
           </ul>
         </div>
-        <div class="top-bar-right" style="color:#FFFFFF; background-color:#000000">
-          <ul class="menu" style="color:#FFFFFF; background-color:#000000">
+        <div class="top-bar-right" style="color:#FFFFFF; background-color:#000000;">
+          <ul class="menu" style="background-color: #000000;">
             {% if user.is_authenticated %}
-            <li><a href="/profile/" style="color:#FFFFFF; background-color:#000000">Your Profile</a></li>
+            <li><a href="/profile/">Your Profile</a></li>
             <li><a href="/logout/" class="button expanded">Log Out</a></li>
             {% else %}
             <li><a href="/login/" class="button expanded">Log In or Register</a></li>
@@ -30,8 +44,10 @@
           </ul>
         </div>
       </div>
-    {% block body %}
-    {% endblock %}
+      {% block body %}
+
+      {% endblock %}
+    </div>
     <script src="{% static "js/vendor/jquery.js" %}"></script>
     <script src="{% static "js/vendor/what-input.js" %}"></script>
     <script src="{% static "js/vendor/foundation.js" %}"></script>

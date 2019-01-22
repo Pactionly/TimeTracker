@@ -1,40 +1,104 @@
 {% extends "base.html" %}
 {% load static %}
 {% block body %}
-  <body>
-    <div class="grid-container">
-      <div class="grid-y grid-padding-y">
-        <div class="cell small-12 medium-12 large-12 offset-2">
-          <h1>Welcome to Time Tracker</h1>
-        <div>
+<body>
+  <div class="grid-container">
+
+    {% if user.is_authenticated %}
+
+    <!-- Banner -->
+    <div class="grid-y grid-padding-y">
+      <div class="cell small-12 medium-12 large-12 offset-2">
+        <h1>Liatrio Apprentice Time Tracker</h1>
       </div>
-      <div class="grid-x grid-padding-x small-up-1 medium-up-2 large-up-3">
-        <div class="cell">
-          <div class="card">
-            <div class="card-divider">
-              <h4>Timesheet</h4>
-            </div>
-            <img src="{% static "media/timesheet.png" %}">
+    </div>
+
+    <!-- Info cards -->
+    <div class="grid-x grid-padding-x">
+
+      <!-- Clock in and out -->
+      <div class="cell large-4 small-12">
+        <div class="card">
+          <div class="card-divider">
+            <h4>Clock in & out</h4>
           </div>
-        </div>
-        <div class="cell">
-          <div class="card">
-            <div class="card-divider">
-              <h4>Calendar</h4>
-            </div>
-            <img src="{% static "media/calendar.png" %}">
+          <div class="card-section" style="background: #3B9DD1;">
+            <h4 class="text-center" style="color: white;"><strong>{{ now }}</strong></h4>
           </div>
-        </div>
-        <div class="cell">
-          <div class="card">
-            <div class="card-divider">
-              <h4>Profile</h4>
-            </div>
-            <img src="{% static "media/profile.png" %}">
+          <div class="card-section">
+            {% if not clocked_in %}
+              <form action="/clock_in/" method="post">
+                {% csrf_token %}
+                <input type="submit" class="button expanded" value="Clock In">
+              </form>
+            {% else %}
+              <form action="/clock_out/" method="post">
+                {% csrf_token %}
+                {{ sheet_form.sheet_id.label_tag }}
+                {{ sheet_form.sheet_id }}
+                {{ sheet_form.activity.label_tag }}
+                {{ sheet_form.activity }}
+                {{ sheet_form.comments.label_tag }}
+                {{ sheet_form.comments }}
+                <input type="submit" class="alert button expanded" value="Clock Out">
+            {% endif %}
           </div>
         </div>
       </div>
 
+      <!-- Current working time -->
+      <div class="cell large-8 small-12">
+        <div class="card">
+          <div class="card-divider">
+            <h4>Your time today</h4>
+          </div>
+          <div class="card-section">
+            <h2 style="color: #000000;"><strong>{{ hours_worked }}</strong> hours <strong>{{ minutes_worked }}</strong> minutes worked today</h2>
+          </div>
+
+          <div class="card-section">
+            <h3 style="color: #000000;">You've worked <strong>18</strong> hours this pay period</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Calendar Events -->
+      <div class="cell large-4 small-12">
+        <div class="card">
+          <div class="card-divider">
+            <h4>Calendar<h4>
+          </div>
+          <div class="card-section">
+            <!-- This is where the text prints out from the appendPre function in js file-->
+            <p id="content" style="white-space: pre-wrap;"></p>
+            <script src="{% static "js/vendor/outputCalText.js" %}"></script>
+            <script async defer src="https://apis.google.com/js/api.js"
+              onload="this.onload=function(){};handleClientLoad()"
+              onreadystatechange="if (this.readyState === 'complete') this.onload()">
+            </script>
+          </div>
+        </div>
+      </div>
+
+      <!-- Graphs -->
+      <div class="cell large-8 small-12">
+        <div class="card">
+          <div class="card-divider">
+            <h4>Graphs</h4>
+          </div>
+          <div class="card-section">
+            <img src="http://www.falconprogrammer.com/wp-content/uploads/2013/12/LineGraph.png" class="float-center">
+          </div>
+        </div>
+      </div>
+
+  {% else %}
+  <div class="grid-y grid-padding-y">
+    <div class="cell small-12 medium-12 large-12 offset-2">
+      <h1>Welcome to Time Tracker, login to get started</h1>
     </div>
-  </body>
+  </div>
+  {% endif %}
+  </div>
+</body>
 {% endblock %}
