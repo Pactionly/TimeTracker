@@ -125,6 +125,7 @@ def logout_view(request):
 
 @login_required
 def profile(request):
+    """Renders Profile"""
     context = {}
     return render(request, 'profile.html', context)
 
