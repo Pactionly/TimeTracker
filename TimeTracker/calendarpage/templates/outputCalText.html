@@ -1,6 +1,31 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
+<style>
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+</style>
   <!--
   <h1>
     <meta charset="utf-8">
@@ -25,7 +50,7 @@
       </div>
 
     <!-- This is where the text prints out from the appendPre function in js file-->
-    <pre id="content" style="white-space: pre-wrap;"></pre>
+    <pre class="tooltiptext" id="content" style="white-space: pre-wrap;" > </pre>
 
     <script src="{% static "js/vendor/outputCalText.js" %}"></script>
     <script async defer src="https://apis.google.com/js/api.js"

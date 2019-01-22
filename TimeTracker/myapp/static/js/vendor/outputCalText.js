@@ -91,6 +91,8 @@ if ( pre.hasChildNodes() )
     var nodeCount = pre.childNodes.length;
     for(var i=0; i < nodeCount; i++)
     {
+//            var values = pre.childNodes[1].textContent;
+//            alert('the value is:' + values);
             pre.removeChild(pre.childNodes[0]);
     } 
 }
@@ -106,9 +108,28 @@ appendPre("Authorize Google Calendar Use");
 * @param {string} message Text to be placed in pre element.
 */
 function appendPre(message) {
+//document.getElementById('content').style.color = "blue";
 var pre = document.getElementById('content');
 var textContent = document.createTextNode(message + '\n');
-pre.appendChild(textContent);
+
+var node = document.createElement("LI");
+node.appendChild(textContent);
+
+var att = document.createAttribute("style");
+att.value = "border-radius: 25px; padding: 20px; background: #73AD21; color: black;"; 
+node.setAttributeNode(att);
+
+/*
+#rcorners1 {
+  border-radius: 25px;
+  background: #73AD21;
+  padding: 20px; 
+  width: 200px;
+  height: 150px;  
+}
+*/
+
+pre.appendChild(node);
 }
 
 /**
@@ -118,8 +139,8 @@ pre.appendChild(textContent);
 * timeMin says that the earliest event that can be printed must be after the current date and time
 */
 function listUpcomingEvents() {
-var today = getCurrentDate();
-//var today = "Tue Jan 22"; Use for testing
+//var today = getCurrentDate();
+var today = "Tue Jan 22"; 
 gapi.client.calendar.events.list({
   'calendarId': 'primary',
   'timeMin': (new Date()).toISOString(),
