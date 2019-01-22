@@ -8,7 +8,6 @@ from django.http import HttpResponse
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
-import datetime
 import google_auth_oauthlib.flow
 
 from . import forms
@@ -21,12 +20,11 @@ def rest_clock_in(request):
     """ REST API for clock in requests"""
     if request.method != 'POST':
         return HttpResponse('Invalid Method')
-    if request.user.ClockInModel.time:
-        return HttpResponse('Already Clocked In')
     time_zone = pytz.timezone('America/Los_Angeles')
-    request.user.ClockInModel.time = time_zone.localize(datetime.now())
-    request.user.ClockInModel.save()
-    return HttpResponse('Success')
+    if hasattr(request.user, 'ClockInModel'):
+        request.user.ClockInModel.delete()
+    models.ClockInModel(id=request.user, time=time_zone.localize(datetime.now())).save()
+    return redirect('/')
 
 @login_required
 def rest_clock_out(request):
@@ -83,13 +81,26 @@ def rest_clock_out(request):
     request.user.ClockInModel.time = None
     request.user.ClockInModel.save()
     return redirect('/')
+
 def index(request):
     """Render homepage"""
-    pressed = False
-    now = datetime.datetime.now()
+    clocked_in = (
+        request.user
+        and hasattr(request.user, 'ClockInModel')
+        and request.user.ClockInModel.time
+    )
+    now = datetime.now()
+    sheet_form = forms.TimesheetForm()
+    seconds_worked = util.current_seconds_worked(request.user)
+    minutes_worked = seconds_worked / 60
+    hours_worked = round(minutes_worked // 60)
+    minutes_worked = round(minutes_worked % 60)
     context = {
-        'pressed': pressed,
-        'now': now
+        'clocked_in': clocked_in,
+        'now': now,
+        'sheet_form': sheet_form,
+        'minutes_worked': minutes_worked,
+        'hours_worked': hours_worked,
     }
     return render(request, 'index.html', context)
 
@@ -114,6 +125,7 @@ def logout_view(request):
 
 @login_required
 def profile(request):
+    """Renders Profile"""
     context = {}
     return render(request, 'profile.html', context)
 
