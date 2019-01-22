@@ -20,11 +20,10 @@ def rest_clock_in(request):
     """ REST API for clock in requests"""
     if request.method != 'POST':
         return HttpResponse('Invalid Method')
-    if request.user.ClockInModel.time:
-        return HttpResponse('Already Clocked In')
     time_zone = pytz.timezone('America/Los_Angeles')
-    request.user.ClockInModel.time = time_zone.localize(datetime.now())
-    request.user.ClockInModel.save()
+    if hasattr(request.user, 'ClockInModel'):
+        request.user.ClockInModel.delete()
+    models.ClockInModel(id=request.user, time=time_zone.localize(datetime.now())).save()
     return redirect('/')
 
 @login_required
