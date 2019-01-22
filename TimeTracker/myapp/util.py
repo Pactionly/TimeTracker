@@ -18,7 +18,7 @@ def authenticate(user, api, version):
             access_token=None,
             client_id=client_secret_file['web']['client_id'],
             client_secret=client_secret_file['web']['client_secret'],
-            refresh_token=user.AuthModel.refresh_key,
+            refresh_token=user.profile.refresh_key,
             token_expiry=None,
             token_uri=GOOGLE_TOKEN_URI,
             user_agent=None,
@@ -32,8 +32,10 @@ def authenticate(user, api, version):
 
 def current_seconds_worked(user):
     """Returns the number of seconds worked since clocking in"""
+    if not user.profile.clock_in_time:
+        return 0
     now = pytz.timezone('America/Los_Angeles').localize(datetime.now())
-    time_diff = now - user.ClockInModel.time
+    time_diff = now - user.profile.clock_in_time
     return time_diff.total_seconds()
 
 def current_day():

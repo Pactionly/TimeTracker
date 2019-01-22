@@ -1,9 +1,17 @@
 version: '3'
 services:
   web:
+    container_name: web
     build: .
     volumes:
       - .:/code
     ports:
       - 8000:8000
     command: python /code/TimeTracker/manage.py runserver 0.0.0.0:8000
+  nginx:
+    restart: always
+    build: ./nginx/
+    depends_on:
+      - web
+    ports:
+      - "80:80"

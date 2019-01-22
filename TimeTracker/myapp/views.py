@@ -8,11 +8,10 @@ from django.http import HttpResponse
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
-import datetime
 import google_auth_oauthlib.flow
+from oauth2client import client
 
 from . import forms
-from . import models
 from . import util
 
 
@@ -21,12 +20,12 @@ def rest_clock_in(request):
     """ REST API for clock in requests"""
     if request.method != 'POST':
         return HttpResponse('Invalid Method')
-    if request.user.ClockInModel.time:
+    if request.user.profile.clock_in_time:
         return HttpResponse('Already Clocked In')
     time_zone = pytz.timezone('America/Los_Angeles')
-    request.user.ClockInModel.time = time_zone.localize(datetime.now())
-    request.user.ClockInModel.save()
-    return HttpResponse('Success')
+    request.user.profile.clock_in_time = time_zone.localize(datetime.now())
+    request.user.save()
+    return redirect('/')
 
 @login_required
 def rest_clock_out(request):
@@ -34,7 +33,7 @@ def rest_clock_out(request):
         Requires Timesheet Form"""
     if request.method != 'POST':
         return HttpResponse('Invalid Method')
-    if not request.user.ClockInModel.time:
+    if not request.user.profile.clock_in_time:
         return HttpResponse('Not Clocked In')
     # Hours Worked Rounded to nearest quarter hour
     hours_worked = round(util.current_seconds_worked(request.user) / 900) / 4
@@ -44,9 +43,16 @@ def rest_clock_out(request):
         return HttpResponse('Invalid Form')
 
     service = util.authenticate(request.user, 'sheets', 'v4')
-    # pylint: disable=line-too-long
-    # pylint: disable=no-member
-    sheet_info = service.spreadsheets().get(spreadsheetId=clock_out_form.cleaned_data['sheet_id']).execute()
+    if service is None:
+        return redirect('/begin_google_auth')
+
+    try:
+        # pylint: disable=line-too-long
+        # pylint: disable=no-member
+
+        sheet_info = service.spreadsheets().get(spreadsheetId=clock_out_form.cleaned_data['sheet_id']).execute()
+    except client.HttpAccessTokenRefreshError:
+        return redirect('/begin_google_auth')
     body = {'values':[[
         util.current_day(),
         clock_out_form.cleaned_data['activity'],
@@ -80,16 +86,27 @@ def rest_clock_out(request):
         range=sheet_range,
         body=body
     ).execute()
-    request.user.ClockInModel.time = None
-    request.user.ClockInModel.save()
+    request.user.profile.clock_in_time = None
+    request.user.save()
     return redirect('/')
+
 def index(request):
     """Render homepage"""
-    pressed = False
-    now = datetime.datetime.now()
+    if not request.user.is_authenticated:
+        return redirect("/login")
+    clocked_in = request.user.profile.clock_in_time is not None
+    now = datetime.now()
+    sheet_form = forms.TimesheetForm()
+    seconds_worked = util.current_seconds_worked(request.user)
+    minutes_worked = seconds_worked / 60
+    hours_worked = round(minutes_worked // 60)
+    minutes_worked = round(minutes_worked % 60)
     context = {
-        'pressed': pressed,
-        'now': now
+        'clocked_in': clocked_in,
+        'now': now,
+        'sheet_form': sheet_form,
+        'minutes_worked': minutes_worked,
+        'hours_worked': hours_worked,
     }
     return render(request, 'index.html', context)
 
@@ -114,6 +131,7 @@ def logout_view(request):
 
 @login_required
 def profile(request):
+    """Renders Profile"""
     context = {}
     return render(request, 'profile.html', context)
 
@@ -176,10 +194,6 @@ def sheets_auth(request):
     credentials = flow.credentials
 
     if credentials.refresh_token:
-        token = models.AuthModel(
-            id=request.user,
-            refresh_key=credentials.refresh_token
-        )
-        token.save()
-
+        request.user.profile.refresh_key = credentials.refresh_token
+        request.user.save()
     return redirect('/')
