@@ -136,6 +136,12 @@ def profile(request):
     return render(request, 'profile.html', context)
 
 @login_required
+def edit_profile(request):
+    """For Profile Editing"""
+    context = {}
+    return render(request, 'profile.html', context)
+
+@login_required
 def sheets(request):
     """View to display sheet update form"""
     if request.method == 'POST':
