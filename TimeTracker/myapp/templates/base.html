@@ -12,19 +12,9 @@
     <link rel="shortcut icon" href="{% static 'media/favicon.ico' %}" type="image/png">
   </head>
   <body>
-    <div class="off-canvas position-left" id="offCanvas" data-off-canvas>
-      <ul class="vertical tabs" data-tabs id="example-tabs">
-        <li class="tabs-title is-active"><a href="#panel1v" aria-selected="true">Home</a></li>
-        <li class="tabs-title"><a href="/calendar/x">Calendar</a></li>
-        <li class="tabs-title"><a href="#panel3v">Timesheet</a></li>
-        <li class="tabs-title"><a href="#panel3v">Analytics</a></li>
-      </ul>
-    </div>
-    <div class="off-canvas-content" data-off-canvas-content>
       <div class="top-bar">
         <div class="top-bar-left">
           <ul class="dropdown menu" data-dropdown-menu>
-            <li><button type="button" class="button" data-toggle="offCanvas">Menu</button></li>
             <li class="menu-text">Time Tracker</li>
             <li><a href="/">Home</a></li>
             <li><a href="/calendar/x">Calendar</a></li>
@@ -47,7 +37,6 @@
       {% block body %}
 
       {% endblock %}
-    </div>
     <script src="{% static "js/vendor/jquery.js" %}"></script>
     <script src="{% static "js/vendor/what-input.js" %}"></script>
     <script src="{% static "js/vendor/foundation.js" %}"></script>
