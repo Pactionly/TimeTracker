@@ -1,6 +1,6 @@
 # TimeTracker
 
-Liatrio Time Tracking Project for the Hello Devops section in the Liatrio DevOps Bootcamp
+Liatrio Time Tracking Project for the Hello DevOps section in the Liatrio DevOps Bootcamp
 
 ## Goals
 
