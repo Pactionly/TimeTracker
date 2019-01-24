@@ -176,10 +176,10 @@ def sheets(request):
 def begin_google_auth(request):
     """Google Authentication"""
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        '/code/client_secret',
+        '/code/client_secret.json',
         scopes=['https://www.googleapis.com/auth/drive']
     )
-    flow.redirect_uri = 'http://localhost:8000/oauth2callback'
+    flow.redirect_uri = request.build_absolute_uri('/finish_google_auth/')
     # pylint: disable=unused-variable
     authorization_url, state = flow.authorization_url(
         access_type='offline',
@@ -188,14 +188,14 @@ def begin_google_auth(request):
     return redirect(authorization_url)
 
 @login_required
-def sheets_auth(request):
+def finish_google_auth(request):
     """Called After Google Auth"""
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        '/code/client_secret',
+        '/code/client_secret.json',
         scopes=['https://www.googleapis.com/auth/drive'],
     )
     code = request.GET.get('code', None)
-    flow.redirect_uri = 'http://localhost:8000/oauth2callback'
+    flow.redirect_uri = request.build_absolute_uri('/finish_google_auth/')
     flow.fetch_token(code=code)
     credentials = flow.credentials
 
