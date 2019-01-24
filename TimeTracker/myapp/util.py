@@ -11,7 +11,7 @@ from googleapiclient.discovery import build
 def authenticate(user, api, version):
     """Returns google service"""
 
-    with open('/code/client_secret', 'r') as file:
+    with open('/code/client_secret.json', 'r') as file:
         client_secret_file = json.load(file)
     try:
         credentials = client.OAuth2Credentials(

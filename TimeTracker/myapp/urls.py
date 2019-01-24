@@ -6,7 +6,7 @@ from . import views
 
 urlpatterns = [
     path('begin_google_auth/', views.begin_google_auth),
-    path('oauth2callback/', views.sheets_auth),
+    path('finish_google_auth/', views.finish_google_auth),
     path('', views.index, name='index'),
     path('login/', adminviews.LoginView.as_view()),
     path('register/', views.register),
