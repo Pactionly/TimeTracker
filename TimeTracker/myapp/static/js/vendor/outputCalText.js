@@ -1,3 +1,4 @@
+//This file is based off of Google API Reference guides - https://developers.google.com/api-client-library/javascript/reference/referencedocs
 // Client ID and API key from the Developer Console
 var CLIENT_ID = '1081502536351-6pojc00bl8ntbe0htg97f8k7b02ieu3g.apps.googleusercontent.com';
 var API_KEY = 'AIzaSyDHv1UgXbh5vw2d94ybdQ2Xcg9UJGfgu48';
@@ -30,9 +31,11 @@ gapi.client.init({
   discoveryDocs: DISCOVERY_DOCS,
   scope: SCOPES
 }).then(function () {
-  // Listen for sign-in state changes.
-  //listen() passes the current state of the user 
-  //(true for signed in) as an argument to the updateSigninStatus function on line 51 
+  /** Listen for sign-in state changes.
+  *  listen() passes the current state of the user 
+  *  (true for signed in) as an argument to the updateSigninStatus function on line 51 
+  *  getAuthInstance returns a GoogleAuth object which restores users sign in state from the previous session.
+  */
   gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
 
   // Handle the initial sign-in state.
@@ -41,7 +44,8 @@ gapi.client.init({
   authorizeButton.onclick = handleAuthClick;
   signoutButton.onclick = handleSignoutClick;
 }, function(error) {
-  appendPre(JSON.stringify(error, null, 2));
+  //appendPre(JSON.stringify(error, null, 2));
+   console.log('Error Initializeing Javascript Client');
 });
 }
 
@@ -112,6 +116,8 @@ function appendPre(message) {
 var pre = document.getElementById('content');
 
 var res = message.split("(");
+var status = res[2];
+//alert(status);
 
 var textContent = document.createTextNode(res[0] + '\n');
 var textContent2 = document.createTextNode(res[1] + '\n');
@@ -122,7 +128,15 @@ node.appendChild(textContent2);
 
 var att = document.createAttribute("style");
 var att2 = document.createAttribute("class");
+if(status == "Finished"){
+att.value = "list-style-type: none; border-style: solid; border-radius: 25px; padding: 20px; background: #C0C0C0; height: 75px; color: black;"; 
+}
+else if(status == "Upcoming"){
 att.value = "list-style-type: none; border-style: solid; border-radius: 25px; padding: 20px; background: #73AD21; height: 75px; color: black;"; 
+}
+else{
+att.value = "list-style-type: none; border-style: solid; border-radius: 25px; padding: 20px; background: #2060ad; height: 75px; color: black;"; 
+}
 att2.value = "no-bullets";
 node.setAttributeNode(att);
 node.setAttributeNode(att2);
@@ -136,12 +150,17 @@ pre.appendChild(node);
 * appropriate message is printed.
 * timeMin says that the earliest event that can be printed must be after the current date and time
 */
+
+var testToday = new Date();
+testToday.setHours(0,0,0,0);
+var testISO = testToday.toISOString();
+
 function listUpcomingEvents() {
 var today = getCurrentDate();
-//var today = "Tue Jan 22"; 
 gapi.client.calendar.events.list({
   'calendarId': 'primary',
-  'timeMin': (new Date()).toISOString(),
+//  'timeMin': (new Date()).toISOString(),
+  'timeMin': testISO, 
   'showDeleted': false,
   'singleEvents': true,
   'maxResults': 10,
@@ -156,9 +175,12 @@ gapi.client.calendar.events.list({
       var event = events[i];
       var when = event.start.dateTime;
       var date = new Date(when);
+      //alert("Start: " + date);
       
       var end = event.end.dateTime;
       var endDate = new Date(end);
+      //alert("End: " + endDate);
+      var status = eventStatus(date, endDate); 
       
 
       var isToday = date.toString().substring(0, 10);
@@ -172,7 +194,7 @@ gapi.client.calendar.events.list({
 	when = event.start.date;
       }
 
-      appendPre(event.summary + ' (' + ' ' + time + ' - ' + endTime );
+      appendPre(event.summary + ' (' + ' ' + time + ' - ' + endTime + '(' + status );
       }
     }
   } else {
@@ -200,4 +222,22 @@ function getCurrentDate(){
   var today = new Date();
   var subToday = today.toString().substring(0, 10);
   return subToday;
+}
+
+function eventStatus(startTime, endTime){
+  var today = new Date();
+  var rightNow = today.getTime();
+  var beginEvent = startTime.getTime();
+  var endEvent = endTime.getTime();
+  var status = "";
+  if(rightNow > beginEvent && rightNow < endEvent){
+    status = "InProgress";
+  }
+  else if(rightNow < beginEvent){
+    status = "Upcoming";
+  }
+  else if(rightNow > endEvent){
+    status = "Finished";
+  }
+  return status;
 }
