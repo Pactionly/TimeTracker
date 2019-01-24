@@ -139,7 +139,7 @@ def profile(request):
 def edit_profile(request):
     """For Profile Editing"""
     context = {}
-    return render(request, 'profile.html', context)
+    return render(request, 'edit_profile.html', context)
 
 @login_required
 def sheets(request):
