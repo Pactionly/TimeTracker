@@ -2,6 +2,7 @@
 
 from datetime import datetime
 import pytz
+import numpy as np
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -14,6 +15,19 @@ from oauth2client import client
 from . import forms
 from . import util
 
+
+@login_required
+def rest_work_stats(request):
+    if request.method != 'GET':
+        return HttpResponse('Invalid Method')
+    service = util.authenticate(request.user, 'sheets', 'v4')
+    data = service.spreadsheets().values().get(
+        spreadsheetId=request.user.profile.sheet_id,
+        range='Sheet2!B3:E1000'
+    )
+    data = data[~np.add(data == '', axis=1)]
+    print(data)
+    return redirect('/')
 
 @login_required
 def rest_clock_in(request):
