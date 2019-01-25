@@ -35,6 +35,13 @@ def rest_work_stats(request):
     service = util.authenticate(request.user, 'sheets', 'v4')
     if service is None:
         return redirect('/begin_google_auth')
+
+    json = {
+        'hours': 0,
+        'last_five_days': []
+    }
+    if request.user.profile.sheet_id == '':
+        return JsonResponse(json)
     try:
         # pylint: disable=no-member
         data = service.spreadsheets().values().get(
@@ -44,10 +51,7 @@ def rest_work_stats(request):
     except client.HttpAccessTokenRefreshError:
         return redirect('/begin_google_auth')
     count = 0
-    json = {
-        'hours': 0,
-        'last_five_days': []
-    }
+
     for entry in data:
         if not entry:
             continue
