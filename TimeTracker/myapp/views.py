@@ -11,6 +11,14 @@ from django.contrib.auth.decorators import login_required
 import google_auth_oauthlib.flow
 from oauth2client import client
 
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set(style="darkgrid")
+
+
 from . import forms
 from . import util
 
@@ -196,4 +204,10 @@ def finish_google_auth(request):
     if credentials.refresh_token:
         request.user.profile.refresh_key = credentials.refresh_token
         request.user.save()
+    return redirect('/')
+
+@login_required
+def graph(request):
+    """Logic for the graphing widget"""
+    context={}
     return redirect('/')
