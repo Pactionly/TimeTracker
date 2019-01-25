@@ -95,15 +95,7 @@ function handleAuthClick(event) {
 
 function handleSignoutClick(event) {
   gapi.auth2.getAuthInstance().signOut();
-  var list = document.getElementById('content');
-  if ( list.hasChildNodes() )
-  {
-      var nodeCount = list.childNodes.length;
-      for(var i=0; i < nodeCount; i++)
-      {
-              list.removeChild(list.childNodes[0]);
-      } 
-  }
+  clearEventList();
   if(list.hasChildNodes() == false){
   appendList("Authorize Google Calendar Use");
   }
@@ -162,7 +154,7 @@ function listUpcomingEvents() {
 listCalendars();
 var today = getCurrentDate();
 gapi.client.calendar.events.list({
-  'calendarId': 'chico-conf@liatrio.com',
+  'calendarId': 'primary',
 //  'timeMin': (new Date()).toISOString(),
   'timeMin': testISO, 
   'showDeleted': false,
@@ -281,10 +273,90 @@ function listCalendarsDropdown(){
              for(i=0;i<calendars.length;i++){
                console.log(i);
                var test = document.getElementById('content2');
-               var testContent = document.createTextNode(i + '\n');
+               var testContent = document.createTextNode(calendars[i].id + '\n');
                var node = document.createElement("LI");
-               node.appendChild(testContent);
+               var node2 = document.createElement("BUTTON");
+               var att = document.createAttribute("id");
+               att.value = calendars[i].id;
+               node2.setAttributeNode(att);
+               node2.appendChild(testContent);
+               node.appendChild(node2);
                test.appendChild(node);
+               dynamicCalButtons(calendars[i].id);
+//Next step is to add an attribute with unique id name that will allow an onclick function to be assigned.
              }
      });
+}
+
+function dynamicCalButtons(but){
+//  var newbutton = document.getElementById(but);
+//Try assigning the name to a global variable
+  document.getElementById(but).addEventListener("click", function() {
+      gotoNode(but);
+  }, false);
+//  newbutton.onclick = calClick;
+}
+
+function calClick(event){
+  alert("sup");
+}
+
+function gotoNode(hi){ 
+  var today = getCurrentDate();
+  clearEventList();
+gapi.client.calendar.events.list({
+  'calendarId': hi,
+//  'timeMin': (new Date()).toISOString(),
+  'timeMin': testISO,
+  'showDeleted': false,
+  'singleEvents': true,
+  'maxResults': 10,
+  'orderBy': 'startTime'
+}).then(function(response) {
+  var events = response.result.items;
+  var list = document.getElementById('content');
+
+  if (events.length > 0) {
+    for (i = 0; i < events.length; i++) {
+      var event = events[i];
+      var when = event.start.dateTime;
+      var date = new Date(when);
+
+      var end = event.end.dateTime;
+      var endDate = new Date(end);
+
+      var status = eventStatus(date, endDate);
+
+
+      var isToday = date.toString().substring(0, 10);
+
+      if(isToday == today){
+      var dateNoTime = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
+      var time = getClockTime(date);
+      var endTime = getClockTime(endDate);
+
+      if (!when) {
+        when = event.start.date;
+      }
+
+      appendList(event.summary + ' (' + ' ' + time + ' - ' + endTime + '(' + status );
+      }
+    }
+  } else {
+    appendList('No upcoming events found.');
+  }
+});
+
+}
+
+function clearEventList(){
+  var list = document.getElementById('content');
+  if ( list.hasChildNodes() )
+  {
+      var nodeCount = list.childNodes.length;
+      for(var i=0; i < nodeCount; i++)
+      {
+              list.removeChild(list.childNodes[0]);
+      } 
+  }
 }
