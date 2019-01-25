@@ -1,10 +1,4 @@
-/* PART 1: This part is more or less lifted as is from Google APIs documentation
-and examples. I have made slight changes to the handleAuthResult function,
-in order to toggle on/off the visibility of two buttons of the user interface.
-*/
-
-// Global variables, the values come from the Developer Console
-// Put your OWN clientID and apiKey
+//Adapted from tutorial found at http://cs.wellesley.edu/~mashups/pages/am4calendar.html
       
 var CLIENT_ID= '1081502536351-6pojc00bl8ntbe0htg97f8k7b02ieu3g.apps.googleusercontent.com';
 var API_KEY= 'AIzaSyDHv1UgXbh5vw2d94ybdQ2Xcg9UJGfgu48';
@@ -71,7 +65,6 @@ gapi.auth2.getAuthInstance().signOut();
 
 function addButtonClick(event) {
   var userChoices = getUserInput();
-  console.log(userChoices);
   if (userChoices)
     createEvent(userChoices);
 }
@@ -113,7 +106,6 @@ function createEvent(eventData) {
 
     // execute the request and do something with response
     request.execute(function(resp) {
-      console.log(resp);
       var signedIn = gapi.auth2.getAuthInstance().isSignedIn.get()
       if (signedIn) {
         alert("Your event was added to the calendar.");
