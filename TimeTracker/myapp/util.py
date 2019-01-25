@@ -10,6 +10,8 @@ from googleapiclient.discovery import build
 
 
 def is_end_of_period(date):
+    """Returns True if the given date 'mm/dd' is the end of a pay period,
+       False otherwise"""
     month = int(date[0:2])
     day = int(date[3:])
     if day == 15:

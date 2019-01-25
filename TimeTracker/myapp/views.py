@@ -2,7 +2,6 @@
 
 from datetime import datetime
 import pytz
-import numpy as np
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
@@ -18,12 +17,26 @@ from . import util
 
 @login_required
 def rest_work_stats(request):
+    """Returns json containing the hours worked for the last five entries
+       and the total hours worked in this pay period
+       {
+         hours: 0.0
+         last_five_days: [
+           {
+             date: '01/01'
+             hours: 0.0
+           },
+           ...
+         ]
+       }
+    """
     if request.method != 'GET':
         return HttpResponse('Invalid Method')
     service = util.authenticate(request.user, 'sheets', 'v4')
     if service is None:
         return redirect('/begin_google_auth')
     try:
+        # pylint: disable=no-member
         data = service.spreadsheets().values().get(
             spreadsheetId=request.user.profile.sheet_id,
             range='Sheet2!B3:E1000'

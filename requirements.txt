@@ -5,4 +5,3 @@ google-auth-oauthlib
 django-allauth
 pylint
 pylint-django
-numpy
