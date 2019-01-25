@@ -10,9 +10,14 @@ from googleapiclient.discovery import build
 
 
 def is_end_of_period(date):
-    month = date[0:2]
-    day = date[3:]
-    return True
+    month = int(date[0:2])
+    day = int(date[3:])
+    if day == 15:
+        return True
+    days_per_month = [-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    if day == days_per_month[month]:
+        return True
+    return False
 
 def authenticate(user, api, version):
     """Returns google service"""

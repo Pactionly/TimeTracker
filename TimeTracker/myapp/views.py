@@ -40,7 +40,7 @@ def rest_work_stats(request):
             continue
         json['last_five_days'].append({
             'date': entry[0],
-            'hours': int(entry[2])
+            'hours': float(entry[2])
         })
         count += 1
         if count > 4:
@@ -50,7 +50,7 @@ def rest_work_stats(request):
             continue
         if util.is_end_of_period(entry[0]):
             break
-        json['hours'] += int(entry[2])
+        json['hours'] += float(entry[2])
 
     return JsonResponse(json)
 
