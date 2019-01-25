@@ -72,11 +72,6 @@
           <div class="card-section">
             <!-- This is where the text prints out from the appendPre function in js file-->
             <p id="content" style="white-space: pre-wrap;"></p>
-            <script src="{% static "js/vendor/outputCalText.js" %}"></script>
-            <script async defer src="https://apis.google.com/js/api.js"
-              onload="this.onload=function(){};handleClientLoad()"
-              onreadystatechange="if (this.readyState === 'complete') this.onload()">
-            </script>
           </div>
         </div>
       </div>
@@ -88,7 +83,7 @@
             <h4>Graphs</h4>
           </div>
           <div class="card-section">
-            <img src="http://www.falconprogrammer.com/wp-content/uploads/2013/12/LineGraph.png" class="float-center">
+            <div id="chartContainer" style="height: 370px; max-width: 920px; margin: 0px auto;"></div>
           </div>
         </div>
       </div>
@@ -102,4 +97,14 @@
   {% endif %}
   </div>
 </body>
+{% endblock %}
+{% block scripts %}
+
+<script src="{% static "js/vendor/canvasjs.min.js" %}"></script>
+<script src="{% static "js/vendor/payPeriodGraph.js" %}"></script>
+<script src="{% static "js/vendor/outputCalText.js" %}"></script>
+<script async defer src="https://apis.google.com/js/api.js"
+  onload="this.onload=function(){};handleClientLoad()"
+  onreadystatechange="if (this.readyState === 'complete') this.onload()">
+</script>
 {% endblock %}
