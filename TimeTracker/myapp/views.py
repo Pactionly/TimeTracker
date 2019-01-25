@@ -4,7 +4,7 @@ from datetime import datetime
 import pytz
 
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
@@ -22,6 +22,62 @@ sns.set(style="darkgrid")
 from . import forms
 from . import util
 
+
+@login_required
+def rest_work_stats(request):
+    """Returns json containing the hours worked for the last five entries
+       and the total hours worked in this pay period
+       {
+         hours: 0.0
+         last_five_days: [
+           {
+             date: '01/01'
+             hours: 0.0
+           },
+           ...
+         ]
+       }
+    """
+    if request.method != 'GET':
+        return HttpResponse('Invalid Method')
+    service = util.authenticate(request.user, 'sheets', 'v4')
+    if service is None:
+        return redirect('/begin_google_auth')
+
+    json = {
+        'hours': 0,
+        'last_five_days': []
+    }
+    if request.user.profile.sheet_id == '':
+        return JsonResponse(json)
+    try:
+        # pylint: disable=no-member
+        data = service.spreadsheets().values().get(
+            spreadsheetId=request.user.profile.sheet_id,
+            range='Sheet2!B3:E1000'
+        ).execute()['values']
+    except client.HttpAccessTokenRefreshError:
+        return redirect('/begin_google_auth')
+    count = 0
+
+    for entry in data:
+        if not entry:
+            continue
+        json['last_five_days'].append({
+            'date': entry[0],
+            'hours': float(entry[2])
+        })
+        count += 1
+        if count > 4:
+            break
+    for entry in data:
+        if not entry:
+            continue
+        if util.is_end_of_period(entry[0]):
+            break
+        json['hours'] += float(entry[2])
+
+    return JsonResponse(json)
 
 @login_required
 def rest_clock_in(request):
@@ -142,6 +198,12 @@ def profile(request):
     """Renders Profile"""
     context = {}
     return render(request, 'profile.html', context)
+
+@login_required
+def edit_profile(request):
+    """For Profile Editing"""
+    context = {}
+    return render(request, 'edit_profile.html', context)
 
 @login_required
 def sheets(request):
