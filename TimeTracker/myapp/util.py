@@ -8,6 +8,12 @@ from oauth2client import client, GOOGLE_TOKEN_URI, GOOGLE_REVOKE_URI
 from googleapiclient.discovery import build
 
 
+
+def is_end_of_period(date):
+    month = date[0:2]
+    day = date[3:]
+    return True
+
 def authenticate(user, api, version):
     """Returns google service"""
 

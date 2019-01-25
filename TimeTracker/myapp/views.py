@@ -5,7 +5,7 @@ import pytz
 import numpy as np
 
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
@@ -21,13 +21,38 @@ def rest_work_stats(request):
     if request.method != 'GET':
         return HttpResponse('Invalid Method')
     service = util.authenticate(request.user, 'sheets', 'v4')
-    data = service.spreadsheets().values().get(
-        spreadsheetId=request.user.profile.sheet_id,
-        range='Sheet2!B3:E1000'
-    )
-    data = data[~np.add(data == '', axis=1)]
-    print(data)
-    return redirect('/')
+    if service is None:
+        return redirect('/begin_google_auth')
+    try:
+        data = service.spreadsheets().values().get(
+            spreadsheetId=request.user.profile.sheet_id,
+            range='Sheet2!B3:E1000'
+        ).execute()['values']
+    except client.HttpAccessTokenRefreshError:
+        return redirect('/begin_google_auth')
+    count = 0
+    json = {
+        'hours': 0,
+        'last_five_days': []
+    }
+    for entry in data:
+        if not entry:
+            continue
+        json['last_five_days'].append({
+            'date': entry[0],
+            'hours': int(entry[2])
+        })
+        count += 1
+        if count > 4:
+            break
+    for entry in data:
+        if not entry:
+            continue
+        if util.is_end_of_period(entry[0]):
+            break
+        json['hours'] += int(entry[2])
+
+    return JsonResponse(json)
 
 @login_required
 def rest_clock_in(request):
