@@ -50,7 +50,7 @@ function initClient() {
     authorizeButton.onclick = handleAuthClick;
     signoutButton.onclick = handleSignoutClick;
   }, function(error) {
-    //appendPre(JSON.stringify(error, null, 2));
+    //appendList(JSON.stringify(error, null, 2));
      console.log('Error Initializing Javascript Client');
   });
 }
@@ -273,11 +273,25 @@ function listCalendarsDropdown(){
              for(i=0;i<calendars.length;i++){
                console.log(i);
                var test = document.getElementById('content2');
-               var testContent = document.createTextNode(calendars[i].id + '\n');
+
+               var message = calendars[i].id;
+               var res = message.split("@");
+               var status = res[0];
+
+               var testContent = document.createTextNode(status + '\n');
                var node = document.createElement("LI");
-               var node2 = document.createElement("BUTTON");
+               var att3 = document.createAttribute("class");
+               var att4 = document.createAttribute("style");
+               att3.value ="no-bullets";
+               node.setAttributeNode(att3);
+               att4.value = "list-style-type: none;"; 
+               node.setAttributeNode(att4);
+
+               var node2 = document.createElement("a");
                var att = document.createAttribute("id");
+               var a = document.createAttribute("button");
                att.value = calendars[i].id;
+               node2.setAttributeNode(a);
                node2.setAttributeNode(att);
                node2.appendChild(testContent);
                node.appendChild(node2);
