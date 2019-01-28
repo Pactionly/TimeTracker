@@ -73,27 +73,6 @@ a {
   color:#FFFFFF;
 }
 
-.mb{
-   background-color: transparent;
-   color: #FFF;
-   font-size: large;
-}
-
-.ddm{
-  display:block;
-  position:absolute;
-  z-index: 1;
-}
-
-.ddm a:hover{
-  background-color: #FFF;
-  color: #000;
-}
-
-.mb:hover .ddm{
-  display:none;
-  color: #FFF;
-}
 
 .dropbtn {
   background-color: #4CAF50;
