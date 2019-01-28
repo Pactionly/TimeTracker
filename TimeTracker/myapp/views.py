@@ -21,7 +21,7 @@ def rest_work_stats(request):
        and the total hours worked in this pay period
        {
          hours: 0.0
-         last_five_days: [
+         daily_stats: [
            {
              date: '01/01'
              hours: 0.0
@@ -38,7 +38,7 @@ def rest_work_stats(request):
 
     json = {
         'hours': 0,
-        'last_five_days': []
+        'daily_stats': []
     }
     if request.user.profile.sheet_id == '':
         return JsonResponse(json)
@@ -50,18 +50,14 @@ def rest_work_stats(request):
         ).execute()['values']
     except client.HttpAccessTokenRefreshError:
         return redirect('/begin_google_auth')
-    count = 0
 
     for entry in data:
         if not entry:
             continue
-        json['last_five_days'].append({
+        json['daily_stats'].append({
             'date': entry[0],
             'hours': float(entry[2])
         })
-        count += 1
-        if count > 4:
-            break
     for entry in data:
         if not entry:
             continue
@@ -188,14 +184,34 @@ def logout_view(request):
 @login_required
 def profile(request):
     """Renders Profile"""
-    context = {}
+    if request.method == 'POST':
+        profile_form = forms.ProfileForm(request.POST)
+        user = request.user
+        if profile_form.is_valid():
+            user.first_name = profile_form.cleaned_data['first_name']
+            user.last_name = profile_form.cleaned_data['last_name']
+            user.profile.sheet_id = profile_form.cleaned_data['sheet_id']
+            user.email = profile_form.cleaned_data['email']
+            user.save()
+        return redirect('/profile/')
+    editing = False
+    context = {
+        'editing': editing,
+    }
     return render(request, 'profile.html', context)
 
 @login_required
 def edit_profile(request):
-    """For Profile Editing"""
-    context = {}
-    return render(request, 'edit_profile.html', context)
+    """Enables the editing of the user profile"""
+    editing = True
+    profile_form = forms.ProfileForm(request.GET)
+    context = {
+        'editing': editing,
+        'profile_form': profile_form
+    }
+    return render(request, 'profile.html', context)
+
+
 
 @login_required
 def sheets(request):
