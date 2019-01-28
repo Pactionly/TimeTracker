@@ -8,6 +8,7 @@ var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
 var authorizeButton = document.getElementById('authorize_button');
 var signoutButton = document.getElementById('signout_button');
 var list = document.getElementById('content');
+var calList = document.getElementById('content2');
 
 /**
 *  On load, called to load the auth2 library and API client library.
@@ -58,7 +59,7 @@ function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
     authorizeButton.style.display = 'none';
     signoutButton.style.display = 'block';
-    listUpcomingEvents();
+    listUpcomingEvents('primary');
     listCalendarsDropdown();
   } else {
     authorizeButton.style.display = 'block';
@@ -139,10 +140,11 @@ var testToday = new Date();
 testToday.setHours(0,0,0,0);
 var testISO = testToday.toISOString();
 
-function listUpcomingEvents() {
+function listUpcomingEvents(id) {
 var today = getCurrentDate();
+clearEventList();
 gapi.client.calendar.events.list({
-  'calendarId': 'primary',
+  'calendarId': id,
 //  'timeMin': (new Date()).toISOString(),
   'timeMin': testISO, 
   'showDeleted': false,
@@ -229,97 +231,46 @@ function listCalendarsDropdown(){
      var request = gapi.client.calendar.calendarList.list();
      request.execute(function(resp){
              var calendars = resp.items;
-             console.log(calendars);
-             console.log(calendars.length);
-             var i;
-             for(i=0;i<calendars.length;i++){
-               console.log(i);
-               var test = document.getElementById('content2');
+             for(var i=0;i<calendars.length;i++){
 
-//               var message = calendars[i].id;
-               var message = calendars[i].summary;
-               var res = message.split("@");
-               var status = res[0];
+               var calSummary= calendars[i].summary;
+               var idSplit = calSummary.split("@");
+               var calName = idSplit[0];
 
-               var testContent = document.createTextNode(status + '\n');
-               var node = document.createElement("LI");
-               var att3 = document.createAttribute("class");
-               var att4 = document.createAttribute("style");
-               att3.value ="no-bullets";
-               node.setAttributeNode(att3);
-               att4.value = "list-style-type: none;"; 
-               node.setAttributeNode(att4);
+               var textContent = document.createTextNode(calName + '\n');
+               var newObject = document.createElement("LI");
+               var classAtt = document.createAttribute("class");
+               var styleAtt = document.createAttribute("style");
+               classAtt.value = "no-bullets";
+               newObject.setAttributeNode(classAtt);
+               styleAtt.value = "list-style-type: none;"; 
+               newObject.setAttributeNode(styleAtt);
 
                var node2 = document.createElement("a");
-               var att = document.createAttribute("id");
+               var idAtt = document.createAttribute("id");
                var a = document.createAttribute("button");
-               att.value = calendars[i].id;
+               idAtt.value = calendars[i].id;
                node2.setAttributeNode(a);
-               node2.setAttributeNode(att);
-               node2.appendChild(testContent);
-               node.appendChild(node2);
-               test.appendChild(node);
-               dynamicCalButtons(calendars[i].id);
-//Next step is to add an attribute with unique id name that will allow an onclick function to be assigned.
+               node2.setAttributeNode(idAtt);
+               node2.appendChild(textContent);
+               newObject.appendChild(node2);
+               calList.appendChild(newObject);
+               assignCalButton(calendars[i].id);
              }
      });
 }
 
-function dynamicCalButtons(but){
-//  var newbutton = document.getElementById(but);
-//Try assigning the name to a global variable
-  document.getElementById(but).addEventListener("click", function() {
-      gotoNode(but);
+/**
+* Display a different calendar for each created button depending on the 
+* calendar id that is given. Usually the calendar id was just dynamically created
+* and we assign the correct calendar to the corresponding id. 
+*/
+function assignCalButton(buttonId){
+  document.getElementById(buttonId).addEventListener("click", function() {
+  listUpcomingEvents(buttonId);
   }, false);
 }
 
-
-function gotoNode(id){ 
-  var today = getCurrentDate();
-  clearEventList();
-gapi.client.calendar.events.list({
-  'calendarId': id,
-//  'timeMin': (new Date()).toISOString(),
-  'timeMin': testISO,
-  'showDeleted': false,
-  'singleEvents': true,
-  'maxResults': 10,
-  'orderBy': 'startTime'
-}).then(function(response) {
-  var events = response.result.items;
-
-  if (events.length > 0) {
-    for (i = 0; i < events.length; i++) {
-      var event = events[i];
-      var when = event.start.dateTime;
-      var date = new Date(when);
-
-      var end = event.end.dateTime;
-      var endDate = new Date(end);
-
-      var status = eventStatus(date, endDate);
-
-
-      var isToday = date.toString().substring(0, 10);
-
-      if(isToday == today){
-      var dateNoTime = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
-      var time = getClockTime(date);
-      var endTime = getClockTime(endDate);
-
-      if (!when) {
-        when = event.start.date;
-      }
-
-      appendList(event.summary + ' (' + ' ' + time + ' - ' + endTime + '(' + status );
-      }
-    }
-  } else {
-    appendList('No upcoming events found.');
-  }
-});
-
-}
 
 /**
 * Removes all elements from the Calendar list. Used when
