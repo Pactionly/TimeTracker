@@ -198,12 +198,11 @@ def profile(request):
             user.email = profile_form.cleaned_data['email']
             user.save()
         return redirect('/profile/')
-    else:
-        editing = False
-        context = {
-            'editing': editing,
-        }
-        return render(request, 'profile.html', context)
+    editing = False
+    context = {
+        'editing': editing,
+    }
+    return render(request, 'profile.html', context)
 
 @login_required
 def edit_profile(request):
