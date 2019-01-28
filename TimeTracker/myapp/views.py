@@ -197,7 +197,7 @@ def profile(request):
             user.profile.sheet_id = profile_form.cleaned_data['sheet_id']
             user.email = profile_form.cleaned_data['email']
             user.save()
-            return redirect('/profile/')
+        return redirect('/profile/')
     else:
         editing = False
         context = {
