@@ -13,6 +13,7 @@ class Profile(models.Model):
         related_name='profile'
     )
     refresh_key = models.CharField(max_length=100)
+    sheet_id = models.CharField(max_length=100, default='')
     clock_in_time = models.DateTimeField(default=None, blank=True, null=True)
 
 

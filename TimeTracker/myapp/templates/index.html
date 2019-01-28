@@ -57,7 +57,7 @@
           </div>
 
           <div class="card-section">
-            <h3 style="color: #000000;">You've worked <strong>18</strong> hours this pay period</h3>
+            <h3 style="color: #000000;">You've worked <strong id="totalHours">-</strong> hours this pay period</h3>
           </div>
         </div>
       </div>
@@ -105,5 +105,6 @@
   </div>
   {% endif %}
   </div>
+  <script src="{% static "js/index.js" %}"></script>
 </body>
 {% endblock %}
