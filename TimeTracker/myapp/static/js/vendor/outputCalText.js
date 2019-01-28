@@ -1,18 +1,13 @@
-//This file is based off of Google API Reference guides - https://developers.google.com/api-client-library/javascript/reference/referencedocs
+//This file is adapted from the Google API Reference guides - https://developers.google.com/api-client-library/javascript/reference/referencedocs
 
-// Client ID and API key from the Developer Console
 var CLIENT_ID = '1081502536351-6pojc00bl8ntbe0htg97f8k7b02ieu3g.apps.googleusercontent.com';
 var API_KEY = 'AIzaSyDHv1UgXbh5vw2d94ybdQ2Xcg9UJGfgu48';
-
-// Array of API discovery doc URLs for APIs used by the quickstart
 var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
-
-// Authorization scopes required by the API; multiple scopes can be
-// included, separated by spaces.
 var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
 
 var authorizeButton = document.getElementById('authorize_button');
 var signoutButton = document.getElementById('signout_button');
+var list = document.getElementById('content');
 
 /**
 *  On load, called to load the auth2 library and API client library.
@@ -43,9 +38,6 @@ function initClient() {
 
     gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
 
-    // Handle the initial sign-in state.
-    // This handles the loading of the correct button if the status wasn't changed between page loads
-
     updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
     authorizeButton.onclick = handleAuthClick;
     signoutButton.onclick = handleSignoutClick;
@@ -71,7 +63,6 @@ function updateSigninStatus(isSignedIn) {
   } else {
     authorizeButton.style.display = 'block';
     signoutButton.style.display = 'none';
-    var list = document.getElementById('content');
 
     if(list.hasChildNodes() == false){
     appendList("Authorize Google Calendar Use");
@@ -85,7 +76,6 @@ function updateSigninStatus(isSignedIn) {
 
 function handleAuthClick(event) {
   gapi.auth2.getAuthInstance().signIn();
-  var list = document.getElementById('content');
   list.removeChild(list.childNodes[0]);
 }
 
@@ -109,7 +99,6 @@ function handleSignoutClick(event) {
 */
 
 function appendList(message) {
-  var list= document.getElementById('content');
 
   var res = message.split("(");
   var status = res[2];
@@ -151,7 +140,6 @@ testToday.setHours(0,0,0,0);
 var testISO = testToday.toISOString();
 
 function listUpcomingEvents() {
-listCalendars();
 var today = getCurrentDate();
 gapi.client.calendar.events.list({
   'calendarId': 'primary',
@@ -163,7 +151,6 @@ gapi.client.calendar.events.list({
   'orderBy': 'startTime'
 }).then(function(response) {
   var events = response.result.items;
-  var list = document.getElementById('content');
 
   if (events.length > 0) {
     for (i = 0; i < events.length; i++) {
@@ -237,31 +224,6 @@ function eventStatus(startTime, endTime){
   return status;
 }
 
-function listCalendars()
-{
-     var request = gapi.client.calendar.calendarList.list();
-     var num;
-     request.execute(function(resp){
-             var calendars = resp.items;
-             console.log(calendars);
-             console.log(calendars.length);
-             num = calendars.length;
-             console.log(num);
-//             console.log(calendars[0].id);
-//Above gets the id of the first calendar in the calendar list. You can see what other elements are accessible from the calendar lists in the calendar
-//objects by going to the console.
-
-/**
- * Use above and the length function to get the list of how many calendars it's possible to access.
- * Iterate through the array of calendars, look at the id's and use the split function to single out calendars ending with liatrio.com
- * after the @.
- * With this information, allow the user to click (preferably with check boxes) which calendars they want to display in todays events list
- * The way promises work you can't access data directly out of them. You can however call functions inside of them so you might be able to set
- * a global variable inside a function.
- */
-
-     });
-}
 
 function listCalendarsDropdown(){
      var request = gapi.client.calendar.calendarList.list();
@@ -274,7 +236,8 @@ function listCalendarsDropdown(){
                console.log(i);
                var test = document.getElementById('content2');
 
-               var message = calendars[i].id;
+//               var message = calendars[i].id;
+               var message = calendars[i].summary;
                var res = message.split("@");
                var status = res[0];
 
@@ -308,18 +271,14 @@ function dynamicCalButtons(but){
   document.getElementById(but).addEventListener("click", function() {
       gotoNode(but);
   }, false);
-//  newbutton.onclick = calClick;
 }
 
-function calClick(event){
-  alert("sup");
-}
 
-function gotoNode(hi){ 
+function gotoNode(id){ 
   var today = getCurrentDate();
   clearEventList();
 gapi.client.calendar.events.list({
-  'calendarId': hi,
+  'calendarId': id,
 //  'timeMin': (new Date()).toISOString(),
   'timeMin': testISO,
   'showDeleted': false,
@@ -328,7 +287,6 @@ gapi.client.calendar.events.list({
   'orderBy': 'startTime'
 }).then(function(response) {
   var events = response.result.items;
-  var list = document.getElementById('content');
 
   if (events.length > 0) {
     for (i = 0; i < events.length; i++) {
@@ -363,12 +321,16 @@ gapi.client.calendar.events.list({
 
 }
 
+/**
+* Removes all elements from the Calendar list. Used when
+* sign in state changes or display calendar changes. 
+*/
+
 function clearEventList(){
-  var list = document.getElementById('content');
-  if ( list.hasChildNodes() )
+  if (list.hasChildNodes())
   {
       var nodeCount = list.childNodes.length;
-      for(var i=0; i < nodeCount; i++)
+      for(var i=0; i<nodeCount; i++)
       {
               list.removeChild(list.childNodes[0]);
       } 
