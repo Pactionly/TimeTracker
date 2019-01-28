@@ -17,18 +17,48 @@
           <div class="card-divider">
             <h4>Profile</h4>
           </div>
-          <div class="card-section">
-            <p>name?</p>
-          </div>
-          <div class="card-section">
-            <p>possibly sheet id?</p>
-          </div>
-          <div class="card-section">
-            <p>{{ user.first_name }} {{ user.last_name }}</p>
-          </div>
-          <div class="card-section">
-            <p> {{ user.email }} </p>
-          </div>
+          {% if not editing %}
+            <div class="card-section">
+              <h5>Name</h5>
+              <p>{{ user.first_name }} {{ user.last_name }}</p>
+            </div>
+            <div class="card-section">
+              <h5>Sheet ID</h5>
+              <p>{{ user.profile.sheet_id }}</p>
+            </div>
+            <div class="card-section">
+              <h5>Email</h5>
+              <p> {{ user.email }} </p>
+            </div>
+            <form action="/edit_profile/" method="GET">
+              {% csrf_token %}
+              <div class="card-section">
+                <input type="submit" class="button expanded" value="Edit">
+              </div>
+            </form>
+          {% else %}
+            <form action="/profile/" method="POST">
+              {% csrf_token %}
+              <div class="card-section">
+                <h5>Name</h5>
+                <p>
+                  {{ profile_form.first_name.label_tag }}
+                  {{ profile_form.first_name }}
+                  {{ profile_form.last_name.label_tag }}
+                  {{ profile_form.last_name }}
+                </p>
+              </div>
+              <div class="card-section">
+                <h5>Sheet ID</h5>
+                <p>{{ profile_form.sheet_id }}</p>
+              </div>
+              <div class="card-section">
+                <h5>Email</h5>
+                <p>{{ profile_form.email }}</p>
+              </div>
+              <input type="submit" class="alert button expanded" value="Save">
+          {% endif %}
+
         </div>
 
   </div>

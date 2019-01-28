@@ -25,3 +25,10 @@ class TimesheetForm(forms.Form):
     sheet_id = forms.CharField(label='Sheet ID', max_length=100)
     activity = forms.CharField(label='Activity', max_length=100)
     comments = forms.CharField(label='Comments', max_length=200)
+
+class ProfileForm(forms.Form):
+    """Form for displaying and editing user profiles"""
+    first_name = forms.CharField(label='First Name', max_length=30)
+    last_name = forms.CharField(label='Last Name', max_length=150)
+    sheet_id = forms.CharField(label='Sheet ID', max_length=100)
+    email = forms.EmailField(label='Email', max_length=200)
