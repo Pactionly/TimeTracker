@@ -196,14 +196,35 @@ def logout_view(request):
 @login_required
 def profile(request):
     """Renders Profile"""
-    context = {}
-    return render(request, 'profile.html', context)
+    if request.method == 'POST':
+        profile_form = forms.ProfileForm(request.POST)
+        user = request.user
+        if profile_form.is_valid():
+            user.first_name = profile_form.cleaned_data['first_name']
+            user.last_name = profile_form.cleaned_data['last_name']
+            user.profile.sheet_id = profile_form.cleaned_data['sheet_id']
+            user.email = profile_form.cleaned_data['email']
+            user.save()
+            return redirect('/profile/')
+    else:
+        editing = False
+        context = {
+            'editing': editing,
+        }
+        return render(request, 'profile.html', context)
 
 @login_required
 def edit_profile(request):
-    """For Profile Editing"""
-    context = {}
-    return render(request, 'edit_profile.html', context)
+    """Enables the editing of the user profile"""
+    editing = True
+    profile_form = forms.ProfileForm()
+    context = {
+        'editing': editing,
+        'profile_form': profile_form
+    }
+    return render(request, 'profile.html', context)
+
+
 
 @login_required
 def sheets(request):
@@ -266,10 +287,4 @@ def finish_google_auth(request):
     if credentials.refresh_token:
         request.user.profile.refresh_key = credentials.refresh_token
         request.user.save()
-    return redirect('/')
-
-@login_required
-def graph(request):
-    """Logic for the graphing widget"""
-    context={}
     return redirect('/')
