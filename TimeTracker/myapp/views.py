@@ -21,7 +21,7 @@ def rest_work_stats(request):
        and the total hours worked in this pay period
        {
          hours: 0.0
-         last_five_days: [
+         daily_stats: [
            {
              date: '01/01'
              hours: 0.0
@@ -38,7 +38,7 @@ def rest_work_stats(request):
 
     json = {
         'hours': 0,
-        'last_five_days': []
+        'daily_stats': []
     }
     if request.user.profile.sheet_id == '':
         return JsonResponse(json)
@@ -50,18 +50,14 @@ def rest_work_stats(request):
         ).execute()['values']
     except client.HttpAccessTokenRefreshError:
         return redirect('/begin_google_auth')
-    count = 0
 
     for entry in data:
         if not entry:
             continue
-        json['last_five_days'].append({
+        json['daily_stats'].append({
             'date': entry[0],
             'hours': float(entry[2])
         })
-        count += 1
-        if count > 4:
-            break
     for entry in data:
         if not entry:
             continue
