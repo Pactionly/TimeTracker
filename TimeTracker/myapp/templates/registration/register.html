@@ -5,21 +5,26 @@
  <div class="grid-x grid-padding-x">
    <!-- <div class="large-4 medium-4 small-12 cell"></div> -->
    <div class="large-4 medium-4 small-12 large-offset-4 medium-offset-4 cell">
-
-      <form action="/register/" method="post">
-         {% csrf_token %}
+     <div class="card">
+       <div class="card-divider">
          <h4 class="text-center">Register</h4>
-         {{ form.errors }}
-         {{ form.username.label_tag }}
-         {{ form.username }}
-         {{ form.email.label_tag }}
-         {{ form.email }}
-         {{ form.password1.label_tag }}
-         {{ form.password1 }}
-         {{ form.password2.label_tag }}
-         {{ form.password2 }}
-         <input type="submit" class="button expanded" value="Register" />
-     </form>
+       </div>
+       <div class="card-section">
+         <form action="/register/" method="post">
+           {% csrf_token %}
+           {{ form.errors }}
+           {{ form.username.label_tag }}
+           {{ form.username }}
+           {{ form.email.label_tag }}
+           {{ form.email }}
+           {{ form.password1.label_tag }}
+           {{ form.password1 }}
+           {{ form.password2.label_tag }}
+           {{ form.password2 }}
+           <input type="submit" class="button expanded" value="Register" />
+         </form>
+       </div>
+     </div>
    </div>
  </div>
  {% endblock %}
