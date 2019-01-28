@@ -11,14 +11,6 @@ from django.contrib.auth.decorators import login_required
 import google_auth_oauthlib.flow
 from oauth2client import client
 
-
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-sns.set(style="darkgrid")
-
-
 from . import forms
 from . import util
 
@@ -217,7 +209,7 @@ def profile(request):
 def edit_profile(request):
     """Enables the editing of the user profile"""
     editing = True
-    profile_form = forms.ProfileForm()
+    profile_form = forms.ProfileForm(request.GET)
     context = {
         'editing': editing,
         'profile_form': profile_form
