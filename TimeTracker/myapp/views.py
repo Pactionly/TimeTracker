@@ -205,7 +205,7 @@ def edit_profile(request):
     """Enables the editing of the user profile"""
     editing = True
     user = request.user
-    data= {
+    data = {
         'first_name': user.first_name,
         'last_name': user.last_name,
         'sheet_id': user.profile.sheet_id,
