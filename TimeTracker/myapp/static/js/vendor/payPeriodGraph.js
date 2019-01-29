@@ -12,7 +12,7 @@ function updatePage(info)
   var totalHours = document.getElementById("totalHours");
   totalHours.innerText = info.hours;
 
-  var lastFiveDays = info.last_five_days;
+  var lastFiveDays = info.daily_stats;
   // Use this variable for calander
   var d = [];
   for(var i = 0; i < lastFiveDays.length; i++)
@@ -23,13 +23,19 @@ function updatePage(info)
   var chart = new CanvasJS.Chart("chartContainer", {
   	animationEnabled: true,
   	title:{
-  		text: "Hours worked this pay period"
+  		text: "Total Hours worked"
   	},
   	axisY:{
   		title: "Hours Worked"
   	},
+    axisX:{
+  		title: "Date",
+      labelAngle: 45,
+      interval: 1
+  	},
   	data: [{
   		type: "column",
+      color: "#3B9DD1",
   		name: "Hours",
   		dataPoints: d
   	}]
