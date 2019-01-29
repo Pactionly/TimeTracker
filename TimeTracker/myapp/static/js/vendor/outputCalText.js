@@ -1,52 +1,51 @@
-//This file is based off of Google API Reference guides - https://developers.google.com/api-client-library/javascript/reference/referencedocs
-// Client ID and API key from the Developer Console
+//This file is adapted from the Google API Reference guides - https://developers.google.com/api-client-library/javascript/reference/referencedocs
+
 var CLIENT_ID = '1081502536351-6pojc00bl8ntbe0htg97f8k7b02ieu3g.apps.googleusercontent.com';
 var API_KEY = 'AIzaSyDHv1UgXbh5vw2d94ybdQ2Xcg9UJGfgu48';
-
-// Array of API discovery doc URLs for APIs used by the quickstart
 var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
-
-// Authorization scopes required by the API; multiple scopes can be
-// included, separated by spaces.
 var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
 
 var authorizeButton = document.getElementById('authorize_button');
 var signoutButton = document.getElementById('signout_button');
+var list = document.getElementById('content');
+var calList = document.getElementById('content2');
 
 /**
 *  On load, called to load the auth2 library and API client library.
 */
+
 function handleClientLoad() {
-gapi.load('client:auth2', initClient);
+  gapi.load('client:auth2', initClient);
 }
 
 /**
 *  Initializes the API client library and sets up sign-in state
 *  listeners.
 */
-function initClient() {
-gapi.client.init({
-  apiKey: API_KEY,
-  clientId: CLIENT_ID,
-  discoveryDocs: DISCOVERY_DOCS,
-  scope: SCOPES
-}).then(function () {
-  /** Listen for sign-in state changes.
-  *  listen() passes the current state of the user 
-  *  (true for signed in) as an argument to the updateSigninStatus function on line 51 
-  *  getAuthInstance returns a GoogleAuth object which restores users sign in state from the previous session.
-  */
-  gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
 
-  // Handle the initial sign-in state.
-  // This handles the loading of the correct button if the status wasn't changed between page loads
-  updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-  authorizeButton.onclick = handleAuthClick;
-  signoutButton.onclick = handleSignoutClick;
-}, function(error) {
-  //appendPre(JSON.stringify(error, null, 2));
-   console.log('Error Initializeing Javascript Client');
-});
+function initClient() {
+  gapi.client.init({
+    apiKey: API_KEY,
+    clientId: CLIENT_ID,
+    discoveryDocs: DISCOVERY_DOCS,
+    scope: SCOPES
+  }).then(function () {
+
+    /** Listen for sign-in state changes.
+    *  listen() passes the current state of the user 
+    *  (true for signed in) as an argument to the updateSigninStatus function on line 51 
+    *  getAuthInstance returns a GoogleAuth object which restores users sign in state from the previous session.
+    */
+
+    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+
+    updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+    authorizeButton.onclick = handleAuthClick;
+    signoutButton.onclick = handleSignoutClick;
+  }, function(error) {
+    //appendList(JSON.stringify(error, null, 2));
+     console.log('Error Initializing Javascript Client');
+  });
 }
 
 /**
@@ -55,93 +54,79 @@ gapi.client.init({
 *  Authorize is default to on in the html which is why the button always appears as authorize
 *  before switching to sign out if necessary.
 */
+
 function updateSigninStatus(isSignedIn) {
-if (isSignedIn) {
-  authorizeButton.style.display = 'none';
-  signoutButton.style.display = 'block';
-  listUpcomingEvents();
-//  var pre = document.getElementById('content');
-//  if(pre.hasChildNodes() == false){
-//  appendPre("Authorize Google Calendar Use");
-//  }
-} else {
-  authorizeButton.style.display = 'block';
-  signoutButton.style.display = 'none';
-  var pre = document.getElementById('content');
-  if(pre.hasChildNodes() == false){
-  appendPre("Authorize Google Calendar Use");
+  if (isSignedIn) {
+    authorizeButton.style.display = 'none';
+    signoutButton.style.display = 'block';
+    listUpcomingEvents('primary');
+    listCalendarsDropdown();
+  } else {
+    authorizeButton.style.display = 'block';
+    signoutButton.style.display = 'none';
+
+    if(list.hasChildNodes() == false){
+    appendList("Authorize Google Calendar Use");
+    }
   }
-//  appendPre("Authorize Google Calendar Use");
-}
 }
 
 /**
 *  Sign in the user upon button click.
 */
+
 function handleAuthClick(event) {
-gapi.auth2.getAuthInstance().signIn();
-var pre = document.getElementById('content');
-pre.removeChild(pre.childNodes[0]);
+  gapi.auth2.getAuthInstance().signIn();
+  list.removeChild(list.childNodes[0]);
 }
 
 /**
 *  Sign out the user upon button click.
 */
+
 function handleSignoutClick(event) {
-gapi.auth2.getAuthInstance().signOut();
-var pre = document.getElementById('content');
-if ( pre.hasChildNodes() )
-{
-    var nodeCount = pre.childNodes.length;
-    for(var i=0; i < nodeCount; i++)
-    {
-//            var values = pre.childNodes[1].textContent;
-//            alert('the value is:' + values);
-            pre.removeChild(pre.childNodes[0]);
-    } 
-}
-if(pre.hasChildNodes() == false){
-appendPre("Authorize Google Calendar Use");
-}
+  gapi.auth2.getAuthInstance().signOut();
+  clearEventList();
+  if(list.hasChildNodes() == false){
+  appendList("Authorize Google Calendar Use");
+  }
 }
 
 /**
-* Append a pre element to the body containing the given message
+* Append a list element to the body containing the given message
 * as its text node. Used to display the results of the API call.
 *
-* @param {string} message Text to be placed in pre element.
+* @param {string} message Text to be placed in list element.
 */
-function appendPre(message) {
-//document.getElementById('content').style.color = "blue";
-var pre = document.getElementById('content');
 
-var res = message.split("(");
-var status = res[2];
-//alert(status);
+function appendList(message) {
 
-var textContent = document.createTextNode(res[0] + '\n');
-var textContent2 = document.createTextNode(res[1] + '\n');
+  var res = message.split("(");
+  var status = res[2];
 
-var node = document.createElement("LI");
-node.appendChild(textContent);
-node.appendChild(textContent2);
+  var textContent = document.createTextNode(res[0] + '\n');
+  var textContent2 = document.createTextNode(res[1] + '\n');
 
-var att = document.createAttribute("style");
-var att2 = document.createAttribute("class");
-if(status == "Finished"){
-att.value = "list-style-type: none; border-style: solid; border-radius: 25px; padding: 20px; background: #C0C0C0; height: 75px; color: black;"; 
-}
-else if(status == "Upcoming"){
-att.value = "list-style-type: none; border-style: solid; border-radius: 25px; padding: 20px; background: #73AD21; height: 75px; color: black;"; 
-}
-else{
-att.value = "list-style-type: none; border-style: solid; border-radius: 25px; padding: 20px; background: #2060ad; height: 75px; color: black;"; 
-}
-att2.value = "no-bullets";
-node.setAttributeNode(att);
-node.setAttributeNode(att2);
+  var node = document.createElement("LI");
+  node.appendChild(textContent);
+  node.appendChild(textContent2);
 
-pre.appendChild(node);
+  var att = document.createAttribute("style");
+  var att2 = document.createAttribute("class");
+  att2.value = "no-bullets";
+  if(status == "Finished"){
+    att.value = "list-style-type: none; border-style: solid; border-radius: 25px; padding: 20px; background: #C0C0C0; height: 75px; color: black;"; 
+  }
+  else if(status == "Upcoming"){
+    att.value = "list-style-type: none; border-style: solid; border-radius: 25px; padding: 20px; background: #73AD21; height: 75px; color: black;"; 
+  }
+  else{
+    att.value = "list-style-type: none; border-style: solid; border-radius: 25px; padding: 20px; background: #2060ad; height: 75px; color: black;"; 
+  }
+  node.setAttributeNode(att);
+  node.setAttributeNode(att2);
+
+  list.appendChild(node);
 }
 
 /**
@@ -155,10 +140,11 @@ var testToday = new Date();
 testToday.setHours(0,0,0,0);
 var testISO = testToday.toISOString();
 
-function listUpcomingEvents() {
+function listUpcomingEvents(id) {
 var today = getCurrentDate();
+clearEventList();
 gapi.client.calendar.events.list({
-  'calendarId': 'primary',
+  'calendarId': id,
 //  'timeMin': (new Date()).toISOString(),
   'timeMin': testISO, 
   'showDeleted': false,
@@ -167,19 +153,16 @@ gapi.client.calendar.events.list({
   'orderBy': 'startTime'
 }).then(function(response) {
   var events = response.result.items;
-  var pre = document.getElementById('content');
-  //appendPre('Upcoming events:');
 
   if (events.length > 0) {
     for (i = 0; i < events.length; i++) {
       var event = events[i];
       var when = event.start.dateTime;
       var date = new Date(when);
-      //alert("Start: " + date);
       
       var end = event.end.dateTime;
       var endDate = new Date(end);
-      //alert("End: " + endDate);
+
       var status = eventStatus(date, endDate); 
       
 
@@ -194,15 +177,16 @@ gapi.client.calendar.events.list({
 	when = event.start.date;
       }
 
-      appendPre(event.summary + ' (' + ' ' + time + ' - ' + endTime + '(' + status );
+      appendList(event.summary + ' (' + ' ' + time + ' - ' + endTime + '(' + status );
       }
     }
   } else {
-    appendPre('No upcoming events found.');
+    appendList('No upcoming events found.');
   }
 });
 }
 
+//Adapted from https://stackoverflow.com/questions/5507989/javascript-clock-update-on-the-minute-help
 function getClockTime(now){
    var hour   = now.getHours();
    var minute = now.getMinutes();
@@ -240,4 +224,66 @@ function eventStatus(startTime, endTime){
     status = "Finished";
   }
   return status;
+}
+
+
+function listCalendarsDropdown(){
+     var request = gapi.client.calendar.calendarList.list();
+     request.execute(function(resp){
+             var calendars = resp.items;
+             for(var i=0;i<calendars.length;i++){
+
+               var calSummary= calendars[i].summary;
+               var idSplit = calSummary.split("@");
+               var calName = idSplit[0];
+
+               var textContent = document.createTextNode(calName + '\n');
+               var newObject = document.createElement("LI");
+               var classAtt = document.createAttribute("class");
+               var styleAtt = document.createAttribute("style");
+               classAtt.value = "no-bullets";
+               newObject.setAttributeNode(classAtt);
+               styleAtt.value = "list-style-type: none;"; 
+               newObject.setAttributeNode(styleAtt);
+
+               var node2 = document.createElement("a");
+               var idAtt = document.createAttribute("id");
+               var a = document.createAttribute("button");
+               idAtt.value = calendars[i].id;
+               node2.setAttributeNode(a);
+               node2.setAttributeNode(idAtt);
+               node2.appendChild(textContent);
+               newObject.appendChild(node2);
+               calList.appendChild(newObject);
+               assignCalButton(calendars[i].id);
+             }
+     });
+}
+
+/**
+* Display a different calendar for each created button depending on the 
+* calendar id that is given. Usually the calendar id was just dynamically created
+* and we assign the correct calendar to the corresponding id. 
+*/
+function assignCalButton(buttonId){
+  document.getElementById(buttonId).addEventListener("click", function() {
+  listUpcomingEvents(buttonId);
+  }, false);
+}
+
+
+/**
+* Removes all elements from the Calendar list. Used when
+* sign in state changes or display calendar changes. 
+*/
+
+function clearEventList(){
+  if (list.hasChildNodes())
+  {
+      var nodeCount = list.childNodes.length;
+      for(var i=0; i<nodeCount; i++)
+      {
+              list.removeChild(list.childNodes[0]);
+      } 
+  }
 }
