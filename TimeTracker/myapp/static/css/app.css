@@ -1,3 +1,4 @@
+//Dropdown menu features obtained from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_js_dropdown_hover
 body {
   background-color: #262626;
   font-family: 'Poppins', sans-serif;
@@ -71,3 +72,39 @@ a {
   background-color:#000000;
   color:#FFFFFF;
 }
+
+
+.dropbtn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+.dropdownd {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #5e4caf;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: white;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdownd:hover .dropdown-content {display: block;}
+
+.dropdownd:hover .dropbtn {background-color: #3e8e41;}
