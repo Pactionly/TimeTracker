@@ -22,4 +22,4 @@ We hope to gain a greater understanding of developing software projects as a tea
 - [Google Sheets API](https://developers.google.com/sheets/api/)
 - [Google Calendar API](https://developers.google.com/calendar/)
 - [Foundation for Sites](https://foundation.zurb.com/sites.html)
-- [Jenkins](http://http://ec2-34-212-34-95.us-west-2.compute.amazonaws.com:8080/blue/organizations/jenkins/TimeTracker/branches)
+- [Jenkins](http://ec2-34-212-34-95.us-west-2.compute.amazonaws.com:8080/blue/organizations/jenkins/TimeTracker/branches)
