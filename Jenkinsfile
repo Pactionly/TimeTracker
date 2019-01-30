@@ -2,7 +2,7 @@ pipeline {
     agent none
     stages {
         stage('Lint') {
-            agent { docker 'af560562826c' }
+            agent { docker 'testing_environment:latest' }
             steps {
                 sh 'python3.6 -m venv venv'
                 sh '. venv/bin/activate'
@@ -11,7 +11,7 @@ pipeline {
             }
          }
          stage('Test') {
-            agent { docker 'af560562826c' }
+            agent { docker 'testing_environment:latest' }
             steps {
                 sh 'python3.6 -m venv venv'
                 sh '. venv/bin/activate'
