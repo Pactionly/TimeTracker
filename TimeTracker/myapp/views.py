@@ -204,7 +204,14 @@ def profile(request):
 def edit_profile(request):
     """Enables the editing of the user profile"""
     editing = True
-    profile_form = forms.ProfileForm(request.GET)
+    user = request.user
+    data = {
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'sheet_id': user.profile.sheet_id,
+        'email': user.email
+    }
+    profile_form = forms.ProfileForm(initial=data)
     context = {
         'editing': editing,
         'profile_form': profile_form

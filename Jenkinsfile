@@ -19,5 +19,14 @@ pipeline {
                 sh 'venv/bin/python3 TimeTracker/manage.py test TimeTracker/TimeTracker/tests'
             }
          }
+         stage('Deploy') {
+	    agent{ label 'master_node' }
+            when {
+                branch 'master'
+            }
+            steps {
+		sh 'sudo git -C /TimeTracker pull'
+            }
+         }
     }
 }
