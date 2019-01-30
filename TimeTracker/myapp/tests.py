@@ -49,13 +49,6 @@ class WorkStatsViewTests(TestCase):
         response = self.client.get('/work_stats/')
         self.assertEqual(response.status_code, 302)
 
-    def test_page_load_with_login(self):
-        """ If logged in page should load properly """
-        self.client.login(username='temp', password='temp')
-        response = self.client.get('/work_stats/')
-        self.assertEqual(response.status_code, 200)
-
-
 class ClockInViewTests(TestCase):
     """ Tests For /clock_in/ """
     def setUp(self):
