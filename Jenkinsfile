@@ -25,10 +25,7 @@ pipeline {
                 branch 'CHICO-766-deploy'
             }
             steps {
-		sh 'whoami'
-		sh 'docker-compose -f /home/ec2-user/TimeTracker/docker-compose.yml build --no-cache'
-                sh 'docker-compose -f /home/ec2-user/TimeTracker/docker-compose.yml down'
-                sh 'docker-compose -f /home/ec2-user/TimeTracker/docker-compose.yml up -d'
+		sh 'git -C /TimeTracker pull'
             }
          }
     }
