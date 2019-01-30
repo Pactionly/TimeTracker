@@ -16,7 +16,7 @@ pipeline {
                 sh 'python3.6 -m venv venv'
                 sh '. venv/bin/activate'
                 sh 'venv/bin/pip install -r requirements.txt'
-                sh 'venv/bin/python3 TimeTracker/manage.py test TimeTracker/TimeTracker/tests'
+                sh 'venv/bin/python3 TimeTracker/manage.py test'
             }
          }
          stage('Deploy') {

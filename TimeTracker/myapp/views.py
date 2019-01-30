@@ -4,7 +4,7 @@ from datetime import datetime
 import pytz
 
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
@@ -71,9 +71,9 @@ def rest_work_stats(request):
 def rest_clock_in(request):
     """ REST API for clock in requests"""
     if request.method != 'POST':
-        return HttpResponse('Invalid Method')
+        return HttpResponseBadRequest('Invalid Method')
     if request.user.profile.clock_in_time:
-        return HttpResponse('Already Clocked In')
+        return HttpResponseBadRequest('Already Clocked In')
     time_zone = pytz.timezone('America/Los_Angeles')
     request.user.profile.clock_in_time = time_zone.localize(datetime.now())
     request.user.save()
