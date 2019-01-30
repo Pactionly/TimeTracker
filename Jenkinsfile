@@ -22,10 +22,10 @@ pipeline {
          stage('Deploy') {
 	    agent{ label 'master_node' }
             when {
-                branch 'CHICO-766-deploy'
+                branch 'master'
             }
             steps {
-		sh 'git -C /TimeTracker pull'
+		sh 'sudo git -C /TimeTracker pull'
             }
          }
     }
