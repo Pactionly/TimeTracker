@@ -1,4 +1,4 @@
-//Dropdown menu features obtained from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_js_dropdown_hover
+/* // Dropdown menu features obtained from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_js_dropdown_hover */
 body {
   background-color: #262626;
   font-family: 'Poppins', sans-serif;
@@ -23,24 +23,24 @@ a {
 
 .button {
   color: #FFFFFF;
-  background-color: #1daf06;
+  background-color: #fc5621;
   border-radius: 20em;
 }
 
 .button:hover {
-  background-color: #1daf06;
+  background-color: #fc5621;
   opacity: 0.8;
 }
 
 .button:focus {
   color: #FFFFFF;
-  background-color: #1daf06;
+  background-color: #fc5621;
   border-radius: 20em;
 }
 
 .button.expanded {
   color: #FFFFFF;
-  background-color: #1daf06;
+  background-color: #fc5621;
   border-radius: 20em;
 }
 
@@ -60,7 +60,7 @@ a {
 }
 
 .card-divider {
-  background-color: #1daf06;
+  background-color: #fc5621;
 }
 
 .top-bar {
