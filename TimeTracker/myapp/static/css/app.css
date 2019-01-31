@@ -23,24 +23,24 @@ a {
 
 .button {
   color: #FFFFFF;
-  background-color: #fc5621;
+  background-color: #1daf06;
   border-radius: 20em;
 }
 
 .button:hover {
-  background-color: #fc5621;
+  background-color: #1daf06;
   opacity: 0.8;
 }
 
 .button:focus {
   color: #FFFFFF;
-  background-color: #fc5621;
+  background-color: #1daf06;
   border-radius: 20em;
 }
 
 .button.expanded {
   color: #FFFFFF;
-  background-color: #fc5621;
+  background-color: #1daf06;
   border-radius: 20em;
 }
 
@@ -60,7 +60,7 @@ a {
 }
 
 .card-divider {
-  background-color: #fc5621;
+  background-color: #1daf06;
 }
 
 .top-bar {
@@ -75,7 +75,7 @@ a {
 
 
 .dropbtn {
-  background-color: #fc5621;
+  background-color: #1daf06;
   color: white;
   padding: 16px;
   font-size: 16px;
@@ -107,4 +107,4 @@ a {
 
 .dropdownd:hover .dropdown-content {display: block;}
 
-.dropdownd:hover .dropbtn {background-color: #fc5621;}
+.dropdownd:hover .dropbtn {background-color: #1daf06;}
