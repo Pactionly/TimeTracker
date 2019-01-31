@@ -93,10 +93,12 @@ function handleSignoutClick(event) {
 }
 
 /**
-* Append a list element to the body containing the given message
+* Append a list element to the calendar dropdown body containing the given message
 * as its text node. Used to display the results of the API call.
+* This function uses javascript to make html and css objects.
 *
-* @param {string} message Text to be placed in list element.
+* @param The message to be appended to the newly created object.
+* This message is displayed on the homepage.
 */
 
 function appendList(message) {
@@ -186,7 +188,12 @@ gapi.client.calendar.events.list({
 });
 }
 
-//Adapted from https://stackoverflow.com/questions/5507989/javascript-clock-update-on-the-minute-help
+/**
+* Adapted from https://stackoverflow.com/questions/5507989/javascript-clock-update-on-the-minute-help
+* Formats a time object to "normal" clock standards for readability.
+* @return the newly formatted time string.
+*/
+
 function getClockTime(now){
    var hour   = now.getHours();
    var minute = now.getMinutes();
@@ -202,11 +209,22 @@ function getClockTime(now){
    return timeString;
 }
 
+/**
+* @return A date object as a string omitting time aspects.
+*/
+
 function getCurrentDate(){
   var today = new Date();
   var subToday = today.toString().substring(0, 10);
   return subToday;
 }
+
+/**
+* Given a start time and an end time of an event through passed in parameters
+* Compare these times with the current time. 
+* @return the status of the event compared to the current time with the options
+* being "InProgress", "Upcoming", or "Finished". 
+*/
 
 function eventStatus(startTime, endTime){
   var today = new Date();
@@ -226,6 +244,12 @@ function eventStatus(startTime, endTime){
   return status;
 }
 
+/**
+* Dynamically creates a new html object for each possible calendar.
+* The objects created are list objects followed by 'a' objects with button, style, and 
+* class attributes. The objects created in this function are appended under the dropdown menu
+* section of the calendar card. 
+*/
 
 function listCalendarsDropdown(){
      var request = gapi.client.calendar.calendarList.list();
@@ -261,10 +285,12 @@ function listCalendarsDropdown(){
 }
 
 /**
-* Display a different calendar for each created button depending on the 
-* calendar id that is given. Usually the calendar id was just dynamically created
-* and we assign the correct calendar to the corresponding id. 
+* Assign a different functionality to each created button object, 
+* based on the calendar id given as a parameter. All buttons call the 
+* listUpcomingEvents function, but with different calendar id's to 
+* call from. 
 */
+
 function assignCalButton(buttonId){
   document.getElementById(buttonId).addEventListener("click", function() {
   listUpcomingEvents(buttonId);
