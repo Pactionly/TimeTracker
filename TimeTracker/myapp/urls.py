@@ -17,4 +17,5 @@ urlpatterns = [
     path('edit_profile/', views.edit_profile),
     path('clock_in/', views.rest_clock_in),
     path('work_stats/', views.rest_work_stats),
+    path('rest_calendar/', views.rest_calendar),
 ]

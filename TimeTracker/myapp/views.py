@@ -16,6 +16,41 @@ from . import util
 
 
 @login_required
+def rest_calendar(request):
+    """Returns json containing calendar data for the logged in user
+       {
+         calendarLists: [
+           {
+             'name': string,
+             'primary': bool,
+             'events': [{GoogleEventJSON}]
+           }
+         ]
+       }
+    """
+    if request.method == 'GET':
+        service = util.authenticate(request.user, 'calendar', 'v3')
+        
+        json = {
+            'calendarLists':[]
+        }
+        cal_lists = service.calendarList().list().execute()
+        for entry in cal_lists['items']:
+            json['calendarLists'].append({
+                'name': entry['summary'].split('@')[0],
+                'primary': 'primary' in entry and entry['primary'],
+                'events': service.events()
+                    .list(
+                        calendarId=entry['id'],
+                        maxResults=15
+                    )
+                    .execute()
+            })
+        return JsonResponse(json)
+    return HttpResponseBadRequest('Invalid Method')
+
+
+@login_required
 def rest_work_stats(request):
     """Returns json containing the hours worked for the last five entries
        and the total hours worked in this pay period
@@ -256,8 +291,12 @@ def begin_google_auth(request):
     """Google Authentication"""
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
         '/code/client_secret.json',
-        scopes=['https://www.googleapis.com/auth/drive']
+        scopes=[
+            'https://www.googleapis.com/auth/spreadsheets',
+            'https://www.googleapis.com/auth/calendar'
+        ]
     )
+    print(request.build_absolute_uri('/finish_google_auth/'))
     flow.redirect_uri = request.build_absolute_uri('/finish_google_auth/')
     # pylint: disable=unused-variable
     authorization_url, state = flow.authorization_url(
@@ -271,7 +310,10 @@ def finish_google_auth(request):
     """Called After Google Auth"""
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
         '/code/client_secret.json',
-        scopes=['https://www.googleapis.com/auth/drive'],
+        scopes=[
+            'https://www.googleapis.com/auth/spreadsheets',
+            'https://www.googleapis.com/auth/calendar'
+        ],
     )
     code = request.GET.get('code', None)
     flow.redirect_uri = request.build_absolute_uri('/finish_google_auth/')
