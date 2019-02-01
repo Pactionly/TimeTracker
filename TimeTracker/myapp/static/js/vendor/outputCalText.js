@@ -32,8 +32,8 @@ function initClient() {
   }).then(function () {
 
     /** Listen for sign-in state changes.
-    *  listen() passes the current state of the user 
-    *  (true for signed in) as an argument to the updateSigninStatus function on line 51 
+    *  listen() passes the current state of the user
+    *  (true for signed in) as an argument to the updateSigninStatus function on line 51
     *  getAuthInstance returns a GoogleAuth object which restores users sign in state from the previous session.
     */
 
@@ -115,13 +115,13 @@ function appendList(message) {
   var att2 = document.createAttribute("class");
   att2.value = "no-bullets";
   if(status == "Finished"){
-    att.value = "list-style-type: none; border-style: solid; border-radius: 25px; padding: 20px; background: #C0C0C0; height: 75px; color: black;"; 
+    att.value = "list-style-type: none; border-style: solid; border-radius: 25px; padding: 20px; background: #C0C0C0; height: 75px; color: black;";
   }
   else if(status == "Upcoming"){
-    att.value = "list-style-type: none; border-style: solid; border-radius: 25px; padding: 20px; background: #73AD21; height: 75px; color: black;"; 
+    att.value = "list-style-type: none; border-style: solid; border-radius: 25px; padding: 20px; background: #1daf06; height: 75px; color: black;";
   }
   else{
-    att.value = "list-style-type: none; border-style: solid; border-radius: 25px; padding: 20px; background: #2060ad; height: 75px; color: black;"; 
+    att.value = "list-style-type: none; border-style: solid; border-radius: 25px; padding: 20px; background: #3b9dd1; height: 75px; color: black;"; 
   }
   node.setAttributeNode(att);
   node.setAttributeNode(att2);
@@ -146,7 +146,7 @@ clearEventList();
 gapi.client.calendar.events.list({
   'calendarId': id,
 //  'timeMin': (new Date()).toISOString(),
-  'timeMin': testISO, 
+  'timeMin': testISO,
   'showDeleted': false,
   'singleEvents': true,
   'maxResults': 10,
@@ -159,12 +159,12 @@ gapi.client.calendar.events.list({
       var event = events[i];
       var when = event.start.dateTime;
       var date = new Date(when);
-      
+
       var end = event.end.dateTime;
       var endDate = new Date(end);
 
-      var status = eventStatus(date, endDate); 
-      
+      var status = eventStatus(date, endDate);
+
 
       var isToday = date.toString().substring(0, 10);
 
@@ -243,7 +243,7 @@ function listCalendarsDropdown(){
                var styleAtt = document.createAttribute("style");
                classAtt.value = "no-bullets";
                newObject.setAttributeNode(classAtt);
-               styleAtt.value = "list-style-type: none;"; 
+               styleAtt.value = "list-style-type: none;";
                newObject.setAttributeNode(styleAtt);
 
                var node2 = document.createElement("a");
@@ -261,9 +261,9 @@ function listCalendarsDropdown(){
 }
 
 /**
-* Display a different calendar for each created button depending on the 
+* Display a different calendar for each created button depending on the
 * calendar id that is given. Usually the calendar id was just dynamically created
-* and we assign the correct calendar to the corresponding id. 
+* and we assign the correct calendar to the corresponding id.
 */
 function assignCalButton(buttonId){
   document.getElementById(buttonId).addEventListener("click", function() {
@@ -274,7 +274,7 @@ function assignCalButton(buttonId){
 
 /**
 * Removes all elements from the Calendar list. Used when
-* sign in state changes or display calendar changes. 
+* sign in state changes or display calendar changes.
 */
 
 function clearEventList(){
@@ -284,6 +284,6 @@ function clearEventList(){
       for(var i=0; i<nodeCount; i++)
       {
               list.removeChild(list.childNodes[0]);
-      } 
+      }
   }
 }
