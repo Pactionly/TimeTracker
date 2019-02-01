@@ -107,21 +107,21 @@ function appendList(message) {
   var textContent = document.createTextNode(res[0] + '\n');
   var textContent2 = document.createTextNode(res[1] + '\n');
 
-  var node = document.createElement("LI");
+  var node = document.createElement("div");
   node.appendChild(textContent);
   node.appendChild(textContent2);
 
   var att = document.createAttribute("style");
   var att2 = document.createAttribute("class");
-  att2.value = "no-bullets";
+  att2.value = "card-section";
   if(status == "Finished"){
-    att.value = "list-style-type: none; border-style: solid; border-radius: 25px; padding: 20px; background: #C0C0C0; height: 75px; color: black;";
+    att.value = "background: #C0C0C0;";
   }
   else if(status == "Upcoming"){
-    att.value = "list-style-type: none; border-style: solid; border-radius: 25px; padding: 20px; background: #1daf06; height: 75px; color: black;";
+    att.value = "background: #1daf06;";
   }
   else{
-    att.value = "list-style-type: none; border-style: solid; border-radius: 25px; padding: 20px; background: #3b9dd1; height: 75px; color: black;"; 
+    att.value = "background: #3b9dd1;";
   }
   node.setAttributeNode(att);
   node.setAttributeNode(att2);
