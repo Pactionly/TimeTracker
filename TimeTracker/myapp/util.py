@@ -12,12 +12,12 @@ from googleapiclient.discovery import build
 
 
 def entry_valid(entry):
-    """ Checks if a spreadsheet entry for a day is valid, meaning it has all 
+    """ Checks if a spreadsheet entry for a day is valid, meaning it has all
         fields filled in a way that makes sense """
 
     if len(entry) != 4:
         return False
-    date_list = re.split('\W', entry[0])
+    date_list = re.split('\\W', entry[0])
     if len(date_list) != 2:
         return False
     try:
@@ -31,7 +31,7 @@ def entry_valid(entry):
 def is_end_of_period(date):
     """Returns True if the given date 'mm/dd' is the end of a pay period,
        False otherwise"""
-    date_list = re.split('\W', date)
+    date_list = re.split('\\W', date)
     month = int(date_list[0])
     day = int(date_list[1])
     if day == 15:

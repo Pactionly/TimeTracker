@@ -145,7 +145,7 @@ def rest_clock_out(request):
 
     clock_out_form = forms.TimesheetForm(request.POST)
     if not clock_out_form.is_valid():
-        return HttpResponseiBadRequest('Invalid Form')
+        return HttpResponseBadRequest('Invalid Form')
 
     service = util.authenticate(request.user, 'sheets', 'v4')
     try:
