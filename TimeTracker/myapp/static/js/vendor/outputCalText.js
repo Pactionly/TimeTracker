@@ -113,15 +113,15 @@ function appendList(message) {
 
   var att = document.createAttribute("style");
   var att2 = document.createAttribute("class");
-  att2.value = "card-section";
+  att2.value = "card";
   if(status == "Finished"){
-    att.value = "background: #C0C0C0;";
+    att.value = "background: #C0C0C0; padding: 1em;";
   }
   else if(status == "Upcoming"){
-    att.value = "background: #1daf06;";
+    att.value = "background: #1daf06; padding: 1em;";
   }
   else{
-    att.value = "background: #3b9dd1;";
+    att.value = "background: #3b9dd1; padding: 1em;";
   }
   node.setAttributeNode(att);
   node.setAttributeNode(att2);
