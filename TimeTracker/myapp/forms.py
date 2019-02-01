@@ -22,7 +22,6 @@ class RegistrationForm(UserCreationForm):
 
 class TimesheetForm(forms.Form):
     """Form for submiting google sheet api requests"""
-    sheet_id = forms.CharField(label='Sheet ID', max_length=100)
     activity = forms.CharField(label='Activity', max_length=100)
     comments = forms.CharField(label='Comments', max_length=200)
 
