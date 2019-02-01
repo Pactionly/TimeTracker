@@ -30,21 +30,26 @@ def rest_calendar(request):
     """
     if request.method == 'GET':
         service = util.authenticate(request.user, 'calendar', 'v3')
-        
+
         json = {
             'calendarLists':[]
         }
+        # pylint: disable=no-member
         cal_lists = service.calendarList().list().execute()
         for entry in cal_lists['items']:
             json['calendarLists'].append({
                 'name': entry['summary'].split('@')[0],
                 'primary': 'primary' in entry and entry['primary'],
-                'events': service.events()
+                # pylint: disable=no-member
+                'events': (
+                    service
+                    .events()
                     .list(
                         calendarId=entry['id'],
                         maxResults=15
                     )
                     .execute()
+                )
             })
         return JsonResponse(json)
     return HttpResponseBadRequest('Invalid Method')
@@ -296,7 +301,6 @@ def begin_google_auth(request):
             'https://www.googleapis.com/auth/calendar'
         ]
     )
-    print(request.build_absolute_uri('/finish_google_auth/'))
     flow.redirect_uri = request.build_absolute_uri('/finish_google_auth/')
     # pylint: disable=unused-variable
     authorization_url, state = flow.authorization_url(
