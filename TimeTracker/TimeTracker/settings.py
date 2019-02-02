@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'ec2-34-212-34-95.us-west-2.compute.amazonaws.com']
 
+LOGIN_URL='/login/'
 
 # Application definition
 

@@ -1,5 +1,6 @@
 """Utility Functions"""
 
+import re
 import json
 from datetime import datetime
 import pytz
@@ -9,11 +10,30 @@ from googleapiclient.discovery import build
 
 
 
+
+def entry_valid(entry):
+    """ Checks if a spreadsheet entry for a day is valid, meaning it has all
+        fields filled in a way that makes sense """
+
+    if len(entry) != 4:
+        return False
+    date_list = re.split('\\W', entry[0])
+    if len(date_list) != 2:
+        return False
+    try:
+        int(date_list[0])
+        int(date_list[1])
+        float(entry[2])
+    except ValueError:
+        return False
+    return True
+
 def is_end_of_period(date):
     """Returns True if the given date 'mm/dd' is the end of a pay period,
        False otherwise"""
-    month = int(date[0:2])
-    day = int(date[3:])
+    date_list = re.split('\\W', date)
+    month = int(date_list[0])
+    day = int(date_list[1])
     if day == 15:
         return True
     days_per_month = [-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]

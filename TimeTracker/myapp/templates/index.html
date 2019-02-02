@@ -34,8 +34,6 @@
             {% else %}
               <form action="/clock_out/" method="post">
                 {% csrf_token %}
-                {{ sheet_form.sheet_id.label_tag }}
-                {{ sheet_form.sheet_id }}
                 {{ sheet_form.activity.label_tag }}
                 {{ sheet_form.activity }}
                 {{ sheet_form.comments.label_tag }}
