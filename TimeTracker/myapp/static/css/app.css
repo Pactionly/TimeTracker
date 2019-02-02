@@ -1,6 +1,5 @@
-/* // Dropdown menu features obtained from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_js_dropdown_hover */
+/* //Dropdown menu features obtained from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_js_dropdown_hover */
 body {
-  background-color: #262626;
   font-family: 'Poppins', sans-serif;
 }
 p {
@@ -57,10 +56,14 @@ a {
 .card {
   border-color: #262626;
   border-radius: 1em;
+  border: 0px;
+  -webkit-box-shadow: 0 0 40px #cacaca;
+          box-shadow: 0 0 40px #cacaca;
 }
 
 .card-divider {
   background-color: #1daf06;
+  color: #1daf06;
 }
 
 .top-bar {
