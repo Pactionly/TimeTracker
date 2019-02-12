@@ -1,4 +1,12 @@
 //This file is adapted from the Google API Reference guides - https://developers.google.com/api-client-library/javascript/reference/referencedocs
+var xhttp = new XMLHttpRequest();
+
+xhttp.onreadystatechange = function()
+{
+  var info = JSON.parse(this.responseText);
+  updatePage(info);
+}
+
 
 var CLIENT_ID = '1081502536351-6pojc00bl8ntbe0htg97f8k7b02ieu3g.apps.googleusercontent.com';
 var API_KEY = 'AIzaSyDHv1UgXbh5vw2d94ybdQ2Xcg9UJGfgu48';
