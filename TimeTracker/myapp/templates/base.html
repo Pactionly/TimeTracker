@@ -18,17 +18,17 @@
           <ul class="dropdown menu" data-dropdown-menu>
             <li class="menu-text">Time Tracker</li>
             <li><a href="/">Home</a></li>
-            <li><button id="authorize_button" class ="button" style="display: none;color:#FFFFFF;">Authorize</button></li>
-            <li><button id="signout_button" class ="button" style="display: none;">Sign Out</button></li>
+            <li><button id="authorize_button" class ="button" style="display: none;color:#FFFFFF;">Authorize Calendar</button></li>
+            <li><button id="signout_button" class="button" style="display: none;">Sign Out</button></li>
           </ul>
         </div>
-        <div class="top-bar-right" style="color:#FFFFFF; background-color:#000000;">
-          <ul class="menu" style="background-color: #000000;">
+        <div class="top-bar-right">
+          <ul class="menu">
             {% if user.is_authenticated %}
             <li><a href="/profile/">Profile</a></li>
-            <li><a href="/logout/" class="button expanded">Log Out</a></li>
+            <li><a href="/logout/">Log Out</a></li>
             {% else %}
-            <li><a href="/login/" class="button expanded">Log In or Register</a></li>
+            <li><a href="/login/">Log In or Register</a></li>
             {% endif %}
           </ul>
         </div>

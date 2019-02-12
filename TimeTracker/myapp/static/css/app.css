@@ -5,19 +5,25 @@ body {
 p {
   font-family: 'Poppins', sans-serif;
 }
-h1, h2, h3, h4 {
+
+h1 {
+  color: #000000;
+  font-weight: bold;
+}
+
+h2, h3, h4 {
   color: #FFFFFF;
   font-family: 'Poppins', sans-serif;
 }
 
 a {
   color: #FFFFFF;
-  background-color: #000000;
+  background-color: #1daf06;
 }
 
-a {
+.top-bar a:hover {
+  font-weight: bold;
   color: #FFFFFF;
-  background-color: #000000;
 }
 
 .button {
@@ -44,12 +50,13 @@ a {
 }
 
 .top-bar {
-  background-color:#000000;
+  background-color:#1daf06;
   color:#FFFFFF;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 
 .dropdown.menu {
-  background-color:#000000;
+  background-color:#1daf06;
   color:#FFFFFF;
 }
 
@@ -65,17 +72,6 @@ a {
   background-color: #1daf06;
   color: #1daf06;
 }
-
-.top-bar {
-  background-color:#000000;
-  color:#FFFFFF;
-}
-
-.dropdown.menu {
-  background-color:#000000;
-  color:#FFFFFF;
-}
-
 
 .dropbtn {
   background-color: #1daf06;
@@ -93,21 +89,35 @@ a {
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: #5e4caf;
-  min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
+  left: 0;
 }
 
 .dropdown-content a {
-  color: white;
+  color: #000000;
+  background-color: #FFFFFF;
   padding: 12px 16px;
   text-decoration: none;
   display: block;
 }
 
-.dropdown-content a:hover {background-color: #ddd;}
+.dropdown-content a:hover {
+  color: #FFFFFF;
+  background-color: #1daf06;
+  font-weight: bold;
+}
 
 .dropdownd:hover .dropdown-content {display: block;}
 
-.dropdownd:hover .dropbtn {background-color: #1daf06;}
+.dropdownd:hover .dropbtn {
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.menu {
+  background-color: #1daf06;
+}
+
+li {
+  background-color: #1daf06;
+}
