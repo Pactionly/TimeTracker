@@ -40,8 +40,8 @@ function initClient() {
   }).then(function () {
 
     /** Listen for sign-in state changes.
-    *  listen() passes the current state of the user 
-    *  (true for signed in) as an argument to the updateSigninStatus function on line 51 
+    *  listen() passes the current state of the user
+    *  (true for signed in) as an argument to the updateSigninStatus function on line 51
     *  getAuthInstance returns a GoogleAuth object which restores users sign in state from the previous session.
     */
 
@@ -101,10 +101,12 @@ function handleSignoutClick(event) {
 }
 
 /**
-* Append a list element to the body containing the given message
+* Append a list element to the calendar dropdown body containing the given message
 * as its text node. Used to display the results of the API call.
+* This function uses javascript to make html and css objects.
 *
-* @param {string} message Text to be placed in list element.
+* @param The message to be appended to the newly created object.
+* This message is displayed on the homepage.
 */
 
 function appendList(message) {
@@ -115,21 +117,21 @@ function appendList(message) {
   var textContent = document.createTextNode(res[0] + '\n');
   var textContent2 = document.createTextNode(res[1] + '\n');
 
-  var node = document.createElement("LI");
+  var node = document.createElement("div");
   node.appendChild(textContent);
   node.appendChild(textContent2);
 
   var att = document.createAttribute("style");
   var att2 = document.createAttribute("class");
-  att2.value = "no-bullets";
+  att2.value = "card";
   if(status == "Finished"){
-    att.value = "list-style-type: none; border-style: solid; border-radius: 25px; padding: 20px; background: #C0C0C0; height: 75px; color: black;"; 
+    att.value = "background: #C0C0C0; padding: 1em;";
   }
   else if(status == "Upcoming"){
-    att.value = "list-style-type: none; border-style: solid; border-radius: 25px; padding: 20px; background: #73AD21; height: 75px; color: black;"; 
+    att.value = "background: #1daf06; padding: 1em;";
   }
   else{
-    att.value = "list-style-type: none; border-style: solid; border-radius: 25px; padding: 20px; background: #2060ad; height: 75px; color: black;"; 
+    att.value = "background: #3b9dd1; padding: 1em;";
   }
   node.setAttributeNode(att);
   node.setAttributeNode(att2);
@@ -154,7 +156,7 @@ clearEventList();
 gapi.client.calendar.events.list({
   'calendarId': id,
 //  'timeMin': (new Date()).toISOString(),
-  'timeMin': testISO, 
+  'timeMin': testISO,
   'showDeleted': false,
   'singleEvents': true,
   'maxResults': 10,
@@ -167,12 +169,12 @@ gapi.client.calendar.events.list({
       var event = events[i];
       var when = event.start.dateTime;
       var date = new Date(when);
-      
+
       var end = event.end.dateTime;
       var endDate = new Date(end);
 
-      var status = eventStatus(date, endDate); 
-      
+      var status = eventStatus(date, endDate);
+
 
       var isToday = date.toString().substring(0, 10);
 
@@ -194,7 +196,12 @@ gapi.client.calendar.events.list({
 });
 }
 
-//Adapted from https://stackoverflow.com/questions/5507989/javascript-clock-update-on-the-minute-help
+/**
+* Adapted from https://stackoverflow.com/questions/5507989/javascript-clock-update-on-the-minute-help
+* Formats a time object to "normal" clock standards for readability.
+* @return the newly formatted time string.
+*/
+
 function getClockTime(now){
    var hour   = now.getHours();
    var minute = now.getMinutes();
@@ -210,11 +217,22 @@ function getClockTime(now){
    return timeString;
 }
 
+/**
+* @return A date object as a string omitting time aspects.
+*/
+
 function getCurrentDate(){
   var today = new Date();
   var subToday = today.toString().substring(0, 10);
   return subToday;
 }
+
+/**
+* Given a start time and an end time of an event through passed in parameters
+* Compare these times with the current time.
+* @return the status of the event compared to the current time with the options
+* being "InProgress", "Upcoming", or "Finished".
+*/
 
 function eventStatus(startTime, endTime){
   var today = new Date();
@@ -234,6 +252,12 @@ function eventStatus(startTime, endTime){
   return status;
 }
 
+/**
+* Dynamically creates a new html object for each possible calendar.
+* The objects created are list objects followed by 'a' objects with button, style, and
+* class attributes. The objects created in this function are appended under the dropdown menu
+* section of the calendar card.
+*/
 
 function listCalendarsDropdown(){
      var request = gapi.client.calendar.calendarList.list();
@@ -251,7 +275,7 @@ function listCalendarsDropdown(){
                var styleAtt = document.createAttribute("style");
                classAtt.value = "no-bullets";
                newObject.setAttributeNode(classAtt);
-               styleAtt.value = "list-style-type: none;"; 
+               styleAtt.value = "list-style-type: none;";
                newObject.setAttributeNode(styleAtt);
 
                var node2 = document.createElement("a");
@@ -269,10 +293,11 @@ function listCalendarsDropdown(){
 }
 
 /**
-* Display a different calendar for each created button depending on the 
+* Display a different calendar for each created button depending on the
 * calendar id that is given. Usually the calendar id was just dynamically created
-* and we assign the correct calendar to the corresponding id. 
+* and we assign the correct calendar to the corresponding id.
 */
+
 function assignCalButton(buttonId){
   document.getElementById(buttonId).addEventListener("click", function() {
   listUpcomingEvents(buttonId);
@@ -282,7 +307,7 @@ function assignCalButton(buttonId){
 
 /**
 * Removes all elements from the Calendar list. Used when
-* sign in state changes or display calendar changes. 
+* sign in state changes or display calendar changes.
 */
 
 function clearEventList(){
@@ -292,6 +317,6 @@ function clearEventList(){
       for(var i=0; i<nodeCount; i++)
       {
               list.removeChild(list.childNodes[0]);
-      } 
+      }
   }
 }
