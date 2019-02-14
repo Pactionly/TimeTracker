@@ -214,6 +214,7 @@ def index(request):
     hours_worked = round(minutes_worked // 60)
     minutes_worked = round(minutes_worked % 60)
     context = {
+        'clock_in_time': request.user.profile.clock_in_time.isoformat(),
         'clocked_in': clocked_in,
         'now': now,
         'sheet_form': sheet_form,

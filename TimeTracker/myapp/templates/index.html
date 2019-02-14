@@ -54,8 +54,11 @@
             <h4>Your time today</h4>
           </div>
           <div class="card-section">
-            <h2 style="color: #000000;"><strong>{{ hours_worked }}</strong> hours <strong>{{ minutes_worked }}</strong> minutes worked today</h2>
-          </div>
+          {#   <h2 style="color: #000000;"><strong id="hoursWorked">{{ hours_worked }}</strong> hours <strong id="minutesWorked">{{ minutes_worked }}</strong> minutes worked today</h2> #}
+          {# </div> #}
+          <div id="hoursWorked">{{ hours_worked }}</div>
+          <div id="minutesWorked">{{ minutes_worked }}</div>
+          <p id="workingTime" value={{ hours_worked }}></p>
 
           <div class="card-section">
             <h3 style="color: #000000;">You've worked <strong id="totalHours">-</strong> hours this pay period</h3>
@@ -106,6 +109,7 @@
 {% endblock %}
 {% block scripts %}
 <script src="{% static "js/vendor/canvasjs.min.js" %}"></script>
+<script src="{% static "js/vendor/yourTime.js" %}"></script>
 <script src="{% static "js/vendor/payPeriodGraph.js" %}"></script>
 <script src="{% static "js/vendor/outputCalText.js" %}"></script>
 <script async defer src="https://apis.google.com/js/api.js"
