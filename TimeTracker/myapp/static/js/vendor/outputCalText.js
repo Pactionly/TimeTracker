@@ -1,11 +1,39 @@
 //This file is adapted from the Google API Reference guides - https://developers.google.com/api-client-library/javascript/reference/referencedocs
+
+var list = document.getElementById('content');
+var calList = document.getElementById('content2');
+
+var primary_user_id;
 var xhttp = new XMLHttpRequest();
 
-xhttp.onreadystatechange = function()
+xhttp.onload= function()
 {
   var info = JSON.parse(this.responseText);
-  updatePage(info);
+//  updatePage(info);
+  console.log(info);
+  //alert("XXXXX");
+  //alert(info.calendarLists[0].name);
+  setCalInfoConfig(info);
+  //info.calendarLists[i].events.items
+  //refresh error just redirect yourself to the sign in page
 }
+
+function setCalInfoConfig(info){
+  for(i=0;i<info.calendarLists.length;i++){
+    if(info.calendarLists[i].primary == true){
+      primary_user_id = info.calendarLists[i].events.summary;
+    }
+  }
+  LUE(primary_user_id, info);
+  LCD(info);
+  //listCalendarsDropdown();
+}
+
+
+
+xhttp.open("GET", "/rest_calendar/", true);
+xhttp.send();
+
 
 
 var CLIENT_ID = '1081502536351-6pojc00bl8ntbe0htg97f8k7b02ieu3g.apps.googleusercontent.com';
@@ -15,8 +43,6 @@ var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
 
 var authorizeButton = document.getElementById('authorize_button');
 var signoutButton = document.getElementById('signout_button');
-var list = document.getElementById('content');
-var calList = document.getElementById('content2');
 
 /**
 *  On load, called to load the auth2 library and API client library.
@@ -31,6 +57,7 @@ function handleClientLoad() {
 *  listeners.
 */
 
+/*
 function initClient() {
   gapi.client.init({
     apiKey: API_KEY,
@@ -38,6 +65,7 @@ function initClient() {
     discoveryDocs: DISCOVERY_DOCS,
     scope: SCOPES
   }).then(function () {
+  */
 
     /** Listen for sign-in state changes.
     *  listen() passes the current state of the user
@@ -45,6 +73,7 @@ function initClient() {
     *  getAuthInstance returns a GoogleAuth object which restores users sign in state from the previous session.
     */
 
+/*
     gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
 
     updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
@@ -55,6 +84,7 @@ function initClient() {
      console.log('Error Initializing Javascript Client');
   });
 }
+*/
 
 /**
 *  Called when the signed in status changes, to update the UI
@@ -63,12 +93,14 @@ function initClient() {
 *  before switching to sign out if necessary.
 */
 
+/*
 function updateSigninStatus(isSignedIn) {
   if (isSignedIn) {
     authorizeButton.style.display = 'none';
     signoutButton.style.display = 'block';
-    listUpcomingEvents('primary');
-    listCalendarsDropdown();
+    //listUpcomingEvents('primary');
+    //for(i = 0; i<info
+    //listCalendarsDropdown();
   } else {
     authorizeButton.style.display = 'block';
     signoutButton.style.display = 'none';
@@ -78,20 +110,24 @@ function updateSigninStatus(isSignedIn) {
     }
   }
 }
+*/
 
 /**
 *  Sign in the user upon button click.
 */
 
+/*
 function handleAuthClick(event) {
   gapi.auth2.getAuthInstance().signIn();
   list.removeChild(list.childNodes[0]);
 }
+*/
 
 /**
 *  Sign out the user upon button click.
 */
 
+/*
 function handleSignoutClick(event) {
   gapi.auth2.getAuthInstance().signOut();
   clearEventList();
@@ -99,6 +135,7 @@ function handleSignoutClick(event) {
   appendList("Authorize Google Calendar Use");
   }
 }
+*/
 
 /**
 * Append a list element to the calendar dropdown body containing the given message
@@ -163,6 +200,7 @@ gapi.client.calendar.events.list({
   'orderBy': 'startTime'
 }).then(function(response) {
   var events = response.result.items;
+  console.log(events);
 
   if (events.length > 0) {
     for (i = 0; i < events.length; i++) {
@@ -194,6 +232,55 @@ gapi.client.calendar.events.list({
     appendList('No upcoming events found.');
   }
 });
+}
+
+function LUE(id, info) {
+//alert("LUE: " + id);
+var today = getCurrentDate();
+clearEventList();
+  var events = null;
+  for(i=0;i<info.calendarLists.length;i++){
+    if(id == info.calendarLists[i].events.summary){
+      events = info.calendarLists[i].events.items;
+    }
+  }
+  //var events = info.calendarLists[0].events.items;
+  console.log(events);
+
+  if (events.length > 0) {
+    for (i = 0; i < events.length; i++) {
+      var event = events[i];
+      console.log(event);
+      if(event.status == "cancelled")
+	continue;
+      console.log(event);
+      var when = event.start.dateTime;
+      var date = new Date(when);
+
+      var end = event.end.dateTime;
+      var endDate = new Date(end);
+
+      var status = eventStatus(date, endDate);
+
+
+      var isToday = date.toString().substring(0, 10);
+
+//      if(isToday == today){
+      var dateNoTime = date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
+      var time = getClockTime(date);
+      var endTime = getClockTime(endDate);
+
+      if (!when) {
+	when = event.start.date;
+      }
+
+      appendList(event.summary + ' (' + ' ' + time + ' - ' + endTime + '(' + status );
+     // }
+    }
+  } else {
+    appendList('No upcoming events found.');
+  }
+//});
 }
 
 /**
@@ -264,6 +351,7 @@ function listCalendarsDropdown(){
      request.execute(function(resp){
              var calendars = resp.items;
              for(var i=0;i<calendars.length;i++){
+	       alert("ALERT: " + calendars[i].id);
 
                var calSummary= calendars[i].summary;
                var idSplit = calSummary.split("@");
@@ -292,15 +380,50 @@ function listCalendarsDropdown(){
      });
 }
 
+function LCD(info){
+//     alert("LCD");
+//     var request = gapi.client.calendar.calendarList.list();
+//     request.execute(function(resp){
+//             var calendars = resp.items;
+             var calendars = info.calendarLists;
+             for(var i=0;i<calendars.length;i++){
+
+               var calSummary= calendars[i].events.summary;
+               var idSplit = calSummary.split("@");
+               var calName = idSplit[0];
+
+               var textContent = document.createTextNode(calName + '\n');
+               var newObject = document.createElement("LI");
+               var classAtt = document.createAttribute("class");
+               var styleAtt = document.createAttribute("style");
+               classAtt.value = "no-bullets";
+               newObject.setAttributeNode(classAtt);
+               styleAtt.value = "list-style-type: none;";
+               newObject.setAttributeNode(styleAtt);
+
+               var node2 = document.createElement("a");
+               var idAtt = document.createAttribute("id");
+               var a = document.createAttribute("button");
+               idAtt.value = calendars[i].events.summary;
+               node2.setAttributeNode(a);
+               node2.setAttributeNode(idAtt);
+               node2.appendChild(textContent);
+               newObject.appendChild(node2);
+               calList.appendChild(newObject);
+               assignCalButton(calendars[i].events.summary, info);
+             }
+ //    });
+}
 /**
 * Display a different calendar for each created button depending on the
 * calendar id that is given. Usually the calendar id was just dynamically created
 * and we assign the correct calendar to the corresponding id.
 */
 
-function assignCalButton(buttonId){
+function assignCalButton(buttonId, info){
   document.getElementById(buttonId).addEventListener("click", function() {
-  listUpcomingEvents(buttonId);
+//  listUpcomingEvents(buttonId);
+    LUE(buttonId, info);
   }, false);
 }
 
@@ -320,3 +443,15 @@ function clearEventList(){
       }
   }
 }
+
+/*
+function getprimaryUser(){
+  var xhttp2 = new XMLHttpRequest();
+
+  var info = JSON.parse(xhttp2.responseText);
+  for(i=0;i<info.calendarLists.length;i++){
+    if(info.calendarLists[i].primary == true);
+      primary_user = infocalendarLists[i].name;
+  }
+}
+*/

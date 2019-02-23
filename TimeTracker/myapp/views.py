@@ -1,6 +1,6 @@
 """Defines rendering logic for views"""
 
-from datetime import datetime
+from datetime import datetime, time 
 import pytz
 
 from django.shortcuts import render, redirect
@@ -28,6 +28,8 @@ def rest_calendar(request):
          ]
        }
     """
+    
+
     if request.method == 'GET':
         service = util.authenticate(request.user, 'calendar', 'v3')
 
@@ -36,6 +38,8 @@ def rest_calendar(request):
         }
         # pylint: disable=no-member
         cal_lists = service.calendarList().list().execute()
+        tz = pytz.timezone('America/Los_Angeles')
+        today = datetime.now(tz).date()
         for entry in cal_lists['items']:
             json['calendarLists'].append({
                 'name': entry['summary'].split('@')[0],
@@ -46,7 +50,13 @@ def rest_calendar(request):
                     .events()
                     .list(
                         calendarId=entry['id'],
-                        maxResults=15
+#       timeMin=pytz.timezone('America/Los_Angeles').localize(datetime.today()).isoformat(),#.replace(tzinfo=pytz.UTC).isoformat(),
+                  	timeMin=tz.localize(datetime.combine(today, time.min), is_dst=None).isoformat(),
+			timeMax=tz.localize(datetime.combine(today, time.max), is_dst=None).isoformat(),
+			showDeleted=False,
+			singleEvents=True,
+			orderBy='startTime',
+                        maxResults=10
                     )
                     .execute()
                 )
